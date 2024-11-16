@@ -1,0 +1,651 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1406B7DD2CCEE13100CB8BE3 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1406B7DC2CCEE13100CB8BE3 /* HapticsManager.swift */; };
+		1406B7DF2CCEE18C00CB8BE3 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1406B7DE2CCEE18C00CB8BE3 /* HealthManager.swift */; };
+		1406B7E12CCEE24F00CB8BE3 /* CreateExercisePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1406B7E02CCEE24F00CB8BE3 /* CreateExercisePage.swift */; };
+		1417AB392CCDC599001BD894 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1417AB382CCDC599001BD894 /* Constants.swift */; };
+		14290B112CCD6AB3008AA83B /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290ADB2CCD6A97008AA83B /* CarouselView.swift */; };
+		14290B132CCD6AB3008AA83B /* ExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290ADD2CCD6A97008AA83B /* ExerciseView.swift */; };
+		14290B142CCD6AB3008AA83B /* FilterRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290ADE2CCD6A97008AA83B /* FilterRow.swift */; };
+		14290B152CCD6AB3008AA83B /* LabeledDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290ADF2CCD6A97008AA83B /* LabeledDivider.swift */; };
+		14290B162CCD6AB3008AA83B /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AE02CCD6A97008AA83B /* Notification.swift */; };
+		14290B172CCD6AB3008AA83B /* NumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AE12CCD6A97008AA83B /* NumberField.swift */; };
+		14290B182CCD6AB3008AA83B /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AE22CCD6A97008AA83B /* TimerView.swift */; };
+		14290B192CCD6AB3008AA83B /* ExercisePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AE42CCD6A97008AA83B /* ExercisePage.swift */; };
+		14290B1B2CCD6AB3008AA83B /* YoutubeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AE62CCD6A97008AA83B /* YoutubeView.swift */; };
+		14290B1C2CCD6AB3008AA83B /* CreatePRTrackerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AE82CCD6A97008AA83B /* CreatePRTrackerPage.swift */; };
+		14290B1D2CCD6AB3008AA83B /* HistoricalGraphViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AE92CCD6A97008AA83B /* HistoricalGraphViews.swift */; };
+		14290B1E2CCD6AB3008AA83B /* HistoryTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AEA2CCD6A97008AA83B /* HistoryTab.swift */; };
+		14290B1F2CCD6AB3008AA83B /* DayEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AEC2CCD6A97008AA83B /* DayEditor.swift */; };
+		14290B202CCD6AB3008AA83B /* SplitEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AED2CCD6A97008AA83B /* SplitEditor.swift */; };
+		14290B212CCD6AB3008AA83B /* PlanTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AEF2CCD6A97008AA83B /* PlanTab.swift */; };
+		14290B222CCD6AB3008AA83B /* SplitListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AF02CCD6A97008AA83B /* SplitListPage.swift */; };
+		14290B232CCD6AB3008AA83B /* ActiveWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AF22CCD6A97008AA83B /* ActiveWorkoutView.swift */; };
+		14290B242CCD6AB3008AA83B /* WorkoutTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AF32CCD6A97008AA83B /* WorkoutTab.swift */; };
+		14290B252CCD6AB3008AA83B /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AF62CCD6A97008AA83B /* StorageManager.swift */; };
+		14290B262CCD6AB3008AA83B /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AF82CCD6A97008AA83B /* Day.swift */; };
+		14290B272CCD6AB3008AA83B /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AF92CCD6A97008AA83B /* Exercise.swift */; };
+		14290B282CCD6AB3008AA83B /* ListExercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AFA2CCD6A97008AA83B /* ListExercise.swift */; };
+		14290B292CCD6AB3008AA83B /* VinceraSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AFB2CCD6A97008AA83B /* VinceraSet.swift */; };
+		14290B2A2CCD6AB3008AA83B /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AFC2CCD6A97008AA83B /* Protocols.swift */; };
+		14290B2B2CCD6AB3008AA83B /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AFD2CCD6A97008AA83B /* Split.swift */; };
+		14290B2C2CCD6AB3008AA83B /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290AFE2CCD6A97008AA83B /* Workout.swift */; };
+		14290B2E2CCD6AB3008AA83B /* DayStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B022CCD6A97008AA83B /* DayStore.swift */; };
+		14290B2F2CCD6AB3008AA83B /* ExerciseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B032CCD6A97008AA83B /* ExerciseStore.swift */; };
+		14290B302CCD6AB3008AA83B /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B042CCD6A97008AA83B /* Router.swift */; };
+		14290B312CCD6AB3008AA83B /* SplitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B052CCD6A97008AA83B /* SplitStore.swift */; };
+		14290B322CCD6AB3008AA83B /* WorkoutStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B062CCD6A97008AA83B /* WorkoutStore.swift */; };
+		14290B332CCD6AB3008AA83B /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B082CCD6A97008AA83B /* Errors.swift */; };
+		14290B342CCD6AB3008AA83B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B092CCD6A97008AA83B /* Extensions.swift */; };
+		14290B352CCD6AB3008AA83B /* Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B0A2CCD6A97008AA83B /* Modifiers.swift */; };
+		14290B382CCD6AB3008AA83B /* VinceraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290B0E2CCD6A97008AA83B /* VinceraApp.swift */; };
+		14290B3A2CCD6AEC008AA83B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14290B002CCD6A97008AA83B /* Preview Assets.xcassets */; };
+		14290B3B2CCD6AEC008AA83B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14290B0C2CCD6A97008AA83B /* Assets.xcassets */; };
+		14290B3C2CCD6AEC008AA83B /* exercises.json in Resources */ = {isa = PBXBuildFile; fileRef = 14290B0D2CCD6A97008AA83B /* exercises.json */; };
+		14290B3D2CCD6AEC008AA83B /* todo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 14290B0F2CCD6A97008AA83B /* todo.txt */; };
+		1463B50B2CD99DAE006515C0 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50A2CD99DA3006515C0 /* Dialog.swift */; };
+		1463B50D2CD99DC0006515C0 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50C2CD99DB6006515C0 /* Detail.swift */; };
+		1463B50F2CD9AEA2006515C0 /* ActiveWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */; };
+		147F63442CCEB1F60016D6FA /* PastWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */; };
+		14BFF4A42CD1538200129D11 /* CustomSearchbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */; };
+		14C30DC82CD07E63007C08EE /* ImmutableExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C30DC72CD07E63007C08EE /* ImmutableExerciseView.swift */; };
+		14D085D82CE7D06A0026FBAE /* ExercisesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D085D72CE7D06A0026FBAE /* ExercisesTab.swift */; };
+		14D085DA2CE7D4B80026FBAE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D085D92CE7D4B50026FBAE /* Settings.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		140399A92CD0726600D8CC4A /* Vincera.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Vincera.entitlements; sourceTree = "<group>"; };
+		1406B7DC2CCEE13100CB8BE3 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
+		1406B7DE2CCEE18C00CB8BE3 /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
+		1406B7E02CCEE24F00CB8BE3 /* CreateExercisePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateExercisePage.swift; sourceTree = "<group>"; };
+		1417AB382CCDC599001BD894 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		1426E6B52CC702A500F1F043 /* Vincera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vincera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		14290ADB2CCD6A97008AA83B /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
+		14290ADD2CCD6A97008AA83B /* ExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseView.swift; sourceTree = "<group>"; };
+		14290ADE2CCD6A97008AA83B /* FilterRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRow.swift; sourceTree = "<group>"; };
+		14290ADF2CCD6A97008AA83B /* LabeledDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledDivider.swift; sourceTree = "<group>"; };
+		14290AE02CCD6A97008AA83B /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		14290AE12CCD6A97008AA83B /* NumberField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberField.swift; sourceTree = "<group>"; };
+		14290AE22CCD6A97008AA83B /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		14290AE42CCD6A97008AA83B /* ExercisePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePage.swift; sourceTree = "<group>"; };
+		14290AE62CCD6A97008AA83B /* YoutubeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeView.swift; sourceTree = "<group>"; };
+		14290AE82CCD6A97008AA83B /* CreatePRTrackerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePRTrackerPage.swift; sourceTree = "<group>"; };
+		14290AE92CCD6A97008AA83B /* HistoricalGraphViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalGraphViews.swift; sourceTree = "<group>"; };
+		14290AEA2CCD6A97008AA83B /* HistoryTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTab.swift; sourceTree = "<group>"; };
+		14290AEC2CCD6A97008AA83B /* DayEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayEditor.swift; sourceTree = "<group>"; };
+		14290AED2CCD6A97008AA83B /* SplitEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitEditor.swift; sourceTree = "<group>"; };
+		14290AEF2CCD6A97008AA83B /* PlanTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanTab.swift; sourceTree = "<group>"; };
+		14290AF02CCD6A97008AA83B /* SplitListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitListPage.swift; sourceTree = "<group>"; };
+		14290AF22CCD6A97008AA83B /* ActiveWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkoutView.swift; sourceTree = "<group>"; };
+		14290AF32CCD6A97008AA83B /* WorkoutTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTab.swift; sourceTree = "<group>"; };
+		14290AF62CCD6A97008AA83B /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		14290AF82CCD6A97008AA83B /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		14290AF92CCD6A97008AA83B /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
+		14290AFA2CCD6A97008AA83B /* ListExercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListExercise.swift; sourceTree = "<group>"; };
+		14290AFB2CCD6A97008AA83B /* VinceraSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VinceraSet.swift; sourceTree = "<group>"; };
+		14290AFC2CCD6A97008AA83B /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		14290AFD2CCD6A97008AA83B /* Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Split.swift; sourceTree = "<group>"; };
+		14290AFE2CCD6A97008AA83B /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
+		14290B002CCD6A97008AA83B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		14290B022CCD6A97008AA83B /* DayStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStore.swift; sourceTree = "<group>"; };
+		14290B032CCD6A97008AA83B /* ExerciseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseStore.swift; sourceTree = "<group>"; };
+		14290B042CCD6A97008AA83B /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		14290B052CCD6A97008AA83B /* SplitStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitStore.swift; sourceTree = "<group>"; };
+		14290B062CCD6A97008AA83B /* WorkoutStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStore.swift; sourceTree = "<group>"; };
+		14290B082CCD6A97008AA83B /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		14290B092CCD6A97008AA83B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		14290B0A2CCD6A97008AA83B /* Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifiers.swift; sourceTree = "<group>"; };
+		14290B0C2CCD6A97008AA83B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		14290B0D2CCD6A97008AA83B /* exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = exercises.json; sourceTree = "<group>"; };
+		14290B0E2CCD6A97008AA83B /* VinceraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VinceraApp.swift; sourceTree = "<group>"; };
+		14290B0F2CCD6A97008AA83B /* todo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
+		1463B50A2CD99DA3006515C0 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
+		1463B50C2CD99DB6006515C0 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
+		1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkout.swift; sourceTree = "<group>"; };
+		147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastWorkoutView.swift; sourceTree = "<group>"; };
+		148B16622CD0499000043E58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearchbar.swift; sourceTree = "<group>"; };
+		14C30DC72CD07E63007C08EE /* ImmutableExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmutableExerciseView.swift; sourceTree = "<group>"; };
+		14D085D72CE7D06A0026FBAE /* ExercisesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesTab.swift; sourceTree = "<group>"; };
+		14D085D92CE7D4B50026FBAE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1426E6B22CC702A500F1F043 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1426E6AC2CC702A500F1F043 = {
+			isa = PBXGroup;
+			children = (
+				14290B102CCD6A97008AA83B /* Vincera */,
+				1426E6B62CC702A500F1F043 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1426E6B62CC702A500F1F043 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1426E6B52CC702A500F1F043 /* Vincera.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		14290AE32CCD6A97008AA83B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */,
+				14290AE02CCD6A97008AA83B /* Notification.swift */,
+				1463B50A2CD99DA3006515C0 /* Dialog.swift */,
+				1463B50C2CD99DB6006515C0 /* Detail.swift */,
+				14290ADB2CCD6A97008AA83B /* CarouselView.swift */,
+				14290ADD2CCD6A97008AA83B /* ExerciseView.swift */,
+				14C30DC72CD07E63007C08EE /* ImmutableExerciseView.swift */,
+				14290ADE2CCD6A97008AA83B /* FilterRow.swift */,
+				14290ADF2CCD6A97008AA83B /* LabeledDivider.swift */,
+				14290AE12CCD6A97008AA83B /* NumberField.swift */,
+				14290AE22CCD6A97008AA83B /* TimerView.swift */,
+				14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		14290AE72CCD6A97008AA83B /* Exercises */ = {
+			isa = PBXGroup;
+			children = (
+				14290AE42CCD6A97008AA83B /* ExercisePage.swift */,
+				14D085D72CE7D06A0026FBAE /* ExercisesTab.swift */,
+				1406B7E02CCEE24F00CB8BE3 /* CreateExercisePage.swift */,
+				14290AE62CCD6A97008AA83B /* YoutubeView.swift */,
+			);
+			path = Exercises;
+			sourceTree = "<group>";
+		};
+		14290AEB2CCD6A97008AA83B /* History */ = {
+			isa = PBXGroup;
+			children = (
+				14290AE82CCD6A97008AA83B /* CreatePRTrackerPage.swift */,
+				14D085D92CE7D4B50026FBAE /* Settings.swift */,
+				147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */,
+				14290AE92CCD6A97008AA83B /* HistoricalGraphViews.swift */,
+				14290AEA2CCD6A97008AA83B /* HistoryTab.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
+		14290AEE2CCD6A97008AA83B /* Editors */ = {
+			isa = PBXGroup;
+			children = (
+				14290AEC2CCD6A97008AA83B /* DayEditor.swift */,
+				14290AED2CCD6A97008AA83B /* SplitEditor.swift */,
+			);
+			path = Editors;
+			sourceTree = "<group>";
+		};
+		14290AF12CCD6A97008AA83B /* Plan */ = {
+			isa = PBXGroup;
+			children = (
+				14290AEE2CCD6A97008AA83B /* Editors */,
+				14290AEF2CCD6A97008AA83B /* PlanTab.swift */,
+				14290AF02CCD6A97008AA83B /* SplitListPage.swift */,
+			);
+			path = Plan;
+			sourceTree = "<group>";
+		};
+		14290AF42CCD6A97008AA83B /* Workout */ = {
+			isa = PBXGroup;
+			children = (
+				14290AF22CCD6A97008AA83B /* ActiveWorkoutView.swift */,
+				14290AF32CCD6A97008AA83B /* WorkoutTab.swift */,
+			);
+			path = Workout;
+			sourceTree = "<group>";
+		};
+		14290AF52CCD6A97008AA83B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				14290AF42CCD6A97008AA83B /* Workout */,
+				14290AF12CCD6A97008AA83B /* Plan */,
+				14290AEB2CCD6A97008AA83B /* History */,
+				14290AE72CCD6A97008AA83B /* Exercises */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		14290AF72CCD6A97008AA83B /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				14290AF62CCD6A97008AA83B /* StorageManager.swift */,
+				1406B7DE2CCEE18C00CB8BE3 /* HealthManager.swift */,
+				1406B7DC2CCEE13100CB8BE3 /* HapticsManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		14290AFF2CCD6A97008AA83B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1417AB382CCDC599001BD894 /* Constants.swift */,
+				14290AFD2CCD6A97008AA83B /* Split.swift */,
+				14290AF82CCD6A97008AA83B /* Day.swift */,
+				14290AF92CCD6A97008AA83B /* Exercise.swift */,
+				14290AFB2CCD6A97008AA83B /* VinceraSet.swift */,
+				14290AFA2CCD6A97008AA83B /* ListExercise.swift */,
+				14290AFE2CCD6A97008AA83B /* Workout.swift */,
+				14290AFC2CCD6A97008AA83B /* Protocols.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		14290B012CCD6A97008AA83B /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				14290B002CCD6A97008AA83B /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		14290B072CCD6A97008AA83B /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				14290B042CCD6A97008AA83B /* Router.swift */,
+				14290B052CCD6A97008AA83B /* SplitStore.swift */,
+				14290B022CCD6A97008AA83B /* DayStore.swift */,
+				14290B062CCD6A97008AA83B /* WorkoutStore.swift */,
+				14290B032CCD6A97008AA83B /* ExerciseStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		14290B0B2CCD6A97008AA83B /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				14290B082CCD6A97008AA83B /* Errors.swift */,
+				14290B092CCD6A97008AA83B /* Extensions.swift */,
+				14290B0A2CCD6A97008AA83B /* Modifiers.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		14290B102CCD6A97008AA83B /* Vincera */ = {
+			isa = PBXGroup;
+			children = (
+				140399A92CD0726600D8CC4A /* Vincera.entitlements */,
+				148B16622CD0499000043E58 /* Info.plist */,
+				14290B0B2CCD6A97008AA83B /* Utils */,
+				14290AF72CCD6A97008AA83B /* Managers */,
+				14290B072CCD6A97008AA83B /* Stores */,
+				14290AFF2CCD6A97008AA83B /* Models */,
+				14290AE32CCD6A97008AA83B /* Components */,
+				14290AF52CCD6A97008AA83B /* Core */,
+				14290B0E2CCD6A97008AA83B /* VinceraApp.swift */,
+				14290B0D2CCD6A97008AA83B /* exercises.json */,
+				14290B0C2CCD6A97008AA83B /* Assets.xcassets */,
+				14290B012CCD6A97008AA83B /* Preview Content */,
+				14290B0F2CCD6A97008AA83B /* todo.txt */,
+			);
+			path = Vincera;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1426E6B42CC702A500F1F043 /* Vincera */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1426E6C32CC702A600F1F043 /* Build configuration list for PBXNativeTarget "Vincera" */;
+			buildPhases = (
+				1426E6B12CC702A500F1F043 /* Sources */,
+				1426E6B22CC702A500F1F043 /* Frameworks */,
+				1426E6B32CC702A500F1F043 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Vincera;
+			productName = LiftLogs;
+			productReference = 1426E6B52CC702A500F1F043 /* Vincera.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1426E6AD2CC702A500F1F043 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1530;
+				TargetAttributes = {
+					1426E6B42CC702A500F1F043 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+				};
+			};
+			buildConfigurationList = 1426E6B02CC702A500F1F043 /* Build configuration list for PBXProject "Vincera" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1426E6AC2CC702A500F1F043;
+			productRefGroup = 1426E6B62CC702A500F1F043 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1426E6B42CC702A500F1F043 /* Vincera */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1426E6B32CC702A500F1F043 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14290B3A2CCD6AEC008AA83B /* Preview Assets.xcassets in Resources */,
+				14290B3B2CCD6AEC008AA83B /* Assets.xcassets in Resources */,
+				14290B3C2CCD6AEC008AA83B /* exercises.json in Resources */,
+				14290B3D2CCD6AEC008AA83B /* todo.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1426E6B12CC702A500F1F043 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14290B112CCD6AB3008AA83B /* CarouselView.swift in Sources */,
+				1417AB392CCDC599001BD894 /* Constants.swift in Sources */,
+				1463B50D2CD99DC0006515C0 /* Detail.swift in Sources */,
+				14290B132CCD6AB3008AA83B /* ExerciseView.swift in Sources */,
+				14290B142CCD6AB3008AA83B /* FilterRow.swift in Sources */,
+				14290B152CCD6AB3008AA83B /* LabeledDivider.swift in Sources */,
+				14290B162CCD6AB3008AA83B /* Notification.swift in Sources */,
+				14290B172CCD6AB3008AA83B /* NumberField.swift in Sources */,
+				14290B182CCD6AB3008AA83B /* TimerView.swift in Sources */,
+				14D085DA2CE7D4B80026FBAE /* Settings.swift in Sources */,
+				14290B192CCD6AB3008AA83B /* ExercisePage.swift in Sources */,
+				14290B1B2CCD6AB3008AA83B /* YoutubeView.swift in Sources */,
+				14290B1C2CCD6AB3008AA83B /* CreatePRTrackerPage.swift in Sources */,
+				14290B1D2CCD6AB3008AA83B /* HistoricalGraphViews.swift in Sources */,
+				14290B1E2CCD6AB3008AA83B /* HistoryTab.swift in Sources */,
+				14290B1F2CCD6AB3008AA83B /* DayEditor.swift in Sources */,
+				14290B202CCD6AB3008AA83B /* SplitEditor.swift in Sources */,
+				14290B212CCD6AB3008AA83B /* PlanTab.swift in Sources */,
+				14290B222CCD6AB3008AA83B /* SplitListPage.swift in Sources */,
+				14290B232CCD6AB3008AA83B /* ActiveWorkoutView.swift in Sources */,
+				14290B242CCD6AB3008AA83B /* WorkoutTab.swift in Sources */,
+				1463B50B2CD99DAE006515C0 /* Dialog.swift in Sources */,
+				14290B252CCD6AB3008AA83B /* StorageManager.swift in Sources */,
+				1406B7DF2CCEE18C00CB8BE3 /* HealthManager.swift in Sources */,
+				14290B262CCD6AB3008AA83B /* Day.swift in Sources */,
+				14290B272CCD6AB3008AA83B /* Exercise.swift in Sources */,
+				14290B282CCD6AB3008AA83B /* ListExercise.swift in Sources */,
+				14290B292CCD6AB3008AA83B /* VinceraSet.swift in Sources */,
+				14290B2A2CCD6AB3008AA83B /* Protocols.swift in Sources */,
+				14290B2B2CCD6AB3008AA83B /* Split.swift in Sources */,
+				14290B2C2CCD6AB3008AA83B /* Workout.swift in Sources */,
+				14BFF4A42CD1538200129D11 /* CustomSearchbar.swift in Sources */,
+				14290B2E2CCD6AB3008AA83B /* DayStore.swift in Sources */,
+				14290B2F2CCD6AB3008AA83B /* ExerciseStore.swift in Sources */,
+				14290B302CCD6AB3008AA83B /* Router.swift in Sources */,
+				1463B50F2CD9AEA2006515C0 /* ActiveWorkout.swift in Sources */,
+				14D085D82CE7D06A0026FBAE /* ExercisesTab.swift in Sources */,
+				14290B312CCD6AB3008AA83B /* SplitStore.swift in Sources */,
+				147F63442CCEB1F60016D6FA /* PastWorkoutView.swift in Sources */,
+				14290B322CCD6AB3008AA83B /* WorkoutStore.swift in Sources */,
+				1406B7E12CCEE24F00CB8BE3 /* CreateExercisePage.swift in Sources */,
+				14290B332CCD6AB3008AA83B /* Errors.swift in Sources */,
+				14290B342CCD6AB3008AA83B /* Extensions.swift in Sources */,
+				14C30DC82CD07E63007C08EE /* ImmutableExerciseView.swift in Sources */,
+				14290B352CCD6AB3008AA83B /* Modifiers.swift in Sources */,
+				1406B7DD2CCEE13100CB8BE3 /* HapticsManager.swift in Sources */,
+				14290B382CCD6AB3008AA83B /* VinceraApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1426E6C12CC702A600F1F043 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1426E6C22CC702A600F1F043 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1426E6C42CC702A600F1F043 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Vincera/Vincera.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Vincera/Preview Content\"";
+				DEVELOPMENT_TEAM = T6D837MWJ7;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Vincera/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Vincera;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattlinder.vincera;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1426E6C52CC702A600F1F043 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Vincera/Vincera.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Vincera/Preview Content\"";
+				DEVELOPMENT_TEAM = T6D837MWJ7;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Vincera/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Vincera;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattlinder.vincera;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1426E6B02CC702A500F1F043 /* Build configuration list for PBXProject "Vincera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1426E6C12CC702A600F1F043 /* Debug */,
+				1426E6C22CC702A600F1F043 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1426E6C32CC702A600F1F043 /* Build configuration list for PBXNativeTarget "Vincera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1426E6C42CC702A600F1F043 /* Debug */,
+				1426E6C52CC702A600F1F043 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1426E6AD2CC702A500F1F043 /* Project object */;
+}
