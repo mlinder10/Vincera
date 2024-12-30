@@ -16,6 +16,18 @@ struct PastWorkoutView: View {
   
   var body: some View {
     List {
+      VStack {
+        if isEditing {
+          TextField("Workout Name", text: $workout.name)
+            .textFieldStyle(.roundedBorder)
+            .autocorrectionDisabled()
+        } else {
+          Text(workout.name)
+            .font(.title3)
+            .fontWeight(.semibold)
+        }
+      }
+      .plainListStyle
       ForEach($workout.exercises, id: \.self) { $wrapper in
         VStack(spacing: 24) {
           if isEditing {
@@ -45,8 +57,6 @@ struct PastWorkoutView: View {
     .listRowSeparator(.visible)
     .scrollIndicators(.hidden)
     .scrollDismissesKeyboard(.interactively)
-    .navigationTitle(workout.name)
-    .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {
         Button { handleEditToggle() } label: {
@@ -62,6 +72,7 @@ struct PastWorkoutView: View {
       return
     }
     do {
+      if workout.name.isEmpty { workout.name = "Empty" }
       try wStore.editWorkout(workout)
       isEditing = false
     } catch {

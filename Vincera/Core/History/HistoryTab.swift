@@ -22,13 +22,13 @@ struct HistoryTab: View {
     }
     .scrollDismissesKeyboard(.interactively)
     .navigationTitle("History")
-    .toolbar {
-      ToolbarItem(placement: .topBarTrailing) {
-        Button { router.goTo(.settings) } label: {
-          Image(systemName: "gearshape")
-        }
-      }
-    }
+//    .toolbar {
+//      ToolbarItem(placement: .topBarTrailing) {
+//        Button { router.goTo(.settings) } label: {
+//          Image(systemName: "gearshape")
+//        }
+//      }
+//    }
   }
 }
 
@@ -80,7 +80,7 @@ fileprivate struct PRCell: View {
     }
     .padding(.vertical)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(RoundedRectangle(cornerRadius: 16).fill(.regularMaterial))
+    .backgroundRect(radius: 16, fill: .regularMaterial)
   }
 }
 

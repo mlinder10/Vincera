@@ -108,7 +108,11 @@ final class ExerciseStore: ObservableObject {
       throw URLError(.badURL)
     }
     
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try JSONDecoder().decode([ListExercise].self, from: data)
+    var request = URLRequest(url: url)
+    request.cachePolicy = .reloadIgnoringLocalCacheData
+    let (data, _) = try await URLSession.shared.data(for: request)
+    
+    let decoded = try JSONDecoder().decode([RemoteListExercise].self, from: data)
+    return decoded.compactMap { $0.toListExercise() }
   }
 }

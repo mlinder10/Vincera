@@ -110,7 +110,7 @@ struct SplitCell: View {
       .onTapGesture { router.goTo(.splitEditor(split)) }
     }
     .padding()
-    .background(RoundedRectangle(cornerRadius: 16).fill(.regularMaterial))
+    .backgroundRect(radius: 16, fill: .regularMaterial)
   }
   
   func handleSelect() {

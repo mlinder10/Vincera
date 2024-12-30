@@ -61,6 +61,45 @@ final class ListExercise: Codable, Identifiable, Hashable {
   )
 }
 
+struct RemoteListExercise: Codable {
+  var id: String?
+  var name: String?
+  var description: String?
+  var directions: [String]?
+  var cues: [String]?
+  var image: String?
+  var videoId: String?
+  var bodyPart: String?
+  var primaryGroup: String?
+  var secondaryGroups: [String]?
+  var exerciseType: String?
+  var equipmentType: String?
+  var repsLow: Int?
+  var repsHigh: Int?
+  
+  func toListExercise() -> ListExercise? {
+    guard let id, let name, let primaryGroup, let exerciseType, let equipmentType, let bodyPart else {
+      return nil
+    }
+    return ListExercise(
+      id: id,
+      name: name,
+      description: description ?? "",
+      directions: directions ?? [],
+      cues: cues ?? [],
+      image: image ?? "",
+      videoId: videoId ?? "",
+      bodyPart: bodyPart,
+      primaryGroup: primaryGroup,
+      secondaryGroups: secondaryGroups ?? [],
+      exerciseType: exerciseType,
+      equipmentType: equipmentType,
+      repsLow: repsLow ?? 0,
+      repsHigh: repsHigh ?? 0
+    )
+  }
+}
+
 extension Sequence<ListExercise> {
   func groupByPrimaryGroup() -> [String: [ListExercise]] {
     var dict = [String: [ListExercise]]()

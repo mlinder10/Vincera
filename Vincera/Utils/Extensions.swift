@@ -123,3 +123,13 @@ func fetchImage(_ filename: String?) async -> UIImage? {
   
   return nil
 }
+
+extension Int {
+  var secondFormatted: String {
+    let minutes = self / 60
+    let seconds = self % 60
+    let secondsString = seconds < 10 ? "0\(seconds)" : "\(seconds)"
+    let minutesString = minutes < 10 ? "0\(minutes)" : "\(minutes)"
+    return "\(minutesString):\(secondsString)"
+  }
+}

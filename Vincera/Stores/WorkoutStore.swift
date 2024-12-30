@@ -25,11 +25,51 @@ enum Timeframe: String, CaseIterable, Identifiable {
   }
 }
 
+struct TimerData {
+  var show: Bool = false
+  var duration: Int = 60
+  var initialDuration: Int = 60
+  var isPaused: Bool = true
+  var publisher = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
+  
+  mutating func togglePause() {
+    isPaused.toggle()
+  }
+  
+  mutating func reset() {
+    duration = initialDuration
+    isPaused = true
+  }
+  
+  func getPercentage() -> Double {
+    return Double(duration) / Double(initialDuration)
+  }
+  
+  mutating func handleChange(_: Int, _ new: Int) {
+    duration = new
+    isPaused = true
+  }
+  
+  @MainActor
+  mutating func handleCount(_: Any) {
+    if !isPaused { duration = duration - 1 }
+    if duration == 0 { handleZero() }
+  }
+  
+  @MainActor
+  private mutating func handleZero() {
+    isPaused = true
+    // TODO: alarm
+    Haptics.shared.play(.heavy)
+  }
+}
+
 @MainActor
 final class WorkoutStore: ObservableObject {
   @Published var workouts: [Workout]
   @Published var active: Workout? = nil
   @Published var meta: WorkoutMeta
+  @Published var timer = TimerData()
   
   init() {
     let workouts: [Workout]? = try? StorageManager.shared.read(.workouts)
@@ -121,6 +161,7 @@ final class WorkoutStore: ObservableObject {
     guard active == nil else { throw VinceraError.existingWorkout }
     HealthManager.shared.startWorkout()
     active = Workout(day)
+    timer = TimerData()
   }
   
   func cancelWorkout() {
@@ -128,7 +169,9 @@ final class WorkoutStore: ObservableObject {
   }
   
   func endWorkout() throws {
-    guard let active, active.isValid() else { return }
+    guard let active, active.isValid() else {
+      throw VinceraError.invalidWorkout
+    }
     active.end = Date()
     try createWorkout(active)
     HealthManager.shared.endWorkout()

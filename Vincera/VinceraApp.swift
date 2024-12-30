@@ -10,22 +10,23 @@ import SwiftUI
 @main
 struct VinceraApp: App {
   @StateObject private var router = Router()
-  @StateObject private var splitStore = SplitStore()
-  @StateObject private var dayStore = DayStore()
-  @StateObject private var workoutStore = WorkoutStore()
-  @StateObject private var exerciseStore = ExerciseStore()
+  @StateObject private var sStore = SplitStore()
+  @StateObject private var dStore = DayStore()
+  @StateObject private var wStore = WorkoutStore()
+  @StateObject private var eStore = ExerciseStore()
   
   var body: some Scene {
     WindowGroup {
-      if exerciseStore.exercises.isEmpty {
+      if eStore.exercises.isEmpty {
         ProgressView()
       } else {
         RootView()
           .environmentObject(router)
-          .environmentObject(splitStore)
-          .environmentObject(dayStore)
-          .environmentObject(workoutStore)
-          .environmentObject(exerciseStore)
+          .environmentObject(sStore)
+          .environmentObject(dStore)
+          .environmentObject(wStore)
+          .environmentObject(eStore)
+          .onReceive(wStore.timer.publisher) { wStore.timer.handleCount($0) }
       }
     }
   }

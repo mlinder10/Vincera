@@ -7,39 +7,7 @@
 
 import SwiftUI
 
-enum TimerDuration: Double, CaseIterable, Identifiable {
-  var id: Self { self }
-  
-  case oneMin = 60
-  case twoMin = 120
-  case threeMin = 180
-  case fiveMin = 300
-  
-  var label: String {
-    switch self {
-    case .oneMin:
-      "One"
-    case .twoMin:
-      "Two"
-    case .threeMin:
-      "Three"
-    case .fiveMin:
-      "Five"
-    }
-  }
-}
-
-struct TimerData {
-  var show: Bool
-  var duration: Double
-  var start: Date? = nil
-  
-  init() {
-    self.show = false
-    self.duration = TimerDuration.oneMin.rawValue
-    self.start = nil
-  }
-}
+fileprivate let CIRCLE_SIZE: CGFloat = 164
 
 struct ActiveWorkoutView: View {
   @EnvironmentObject private var router: Router
@@ -47,19 +15,22 @@ struct ActiveWorkoutView: View {
   @EnvironmentObject private var wStore: WorkoutStore
   @Binding var workout: Workout
   @State private var validate = false
-  @State private var timer = TimerData()
   private var previous: [Exercise] { wStore.getPreviousExercises(listIds: workout.exercises.flattened().map({ $0.listId })) }
   
   var body: some View {
-    List {
-      exercises
-      addExerciseButton
-      saveWorkoutButton
+    ZStack {
+      List {
+        exercises
+        addExerciseButton
+        saveWorkoutButton
+      }
+      .listRowSpacing(4)
+      .listRowSeparator(.visible)
+      .scrollIndicators(.hidden)
+      .scrollDismissesKeyboard(.interactively)
+      RestTimerView()
+      .padding(.horizontal)
     }
-    .listRowSpacing(4)
-    .listRowSeparator(.visible)
-    .scrollIndicators(.hidden)
-    .scrollDismissesKeyboard(.interactively)
     .navigationTitle(workout.name)
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
@@ -72,15 +43,7 @@ struct ActiveWorkoutView: View {
         }
       }
       ToolbarItem(placement: .topBarTrailing) {
-//        TimerView(start: workout.start)
-        Button { timer.show = true } label: {
-          Text("Timer")
-        }
-      }
-    }
-    .overlay {
-      if timer.show {
-        RestTimerView(data: $timer)
+        TimerView(start: workout.start)
       }
     }
   }
@@ -162,40 +125,4 @@ struct ActiveWorkoutView: View {
   }
 }
 
-struct RestTimerView: View {
-  @Binding var data: TimerData
-  
-  var body: some View {
-    ZStack {
-      Color.black.opacity(0.3)
-        .onTapGesture { data.show = false }
-      VStack {
-        Text("test")
-        VStack {
-          LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
-            ForEach(TimerDuration.allCases) { dur in
-              Button { data.duration = dur.rawValue } label: {
-                Text(dur.label)
-                  .frame(maxWidth: .infinity)
-              }
-              .borderedProminent
-            }
-          }
-          Button {} label: {
-            Text("Custom Value")
-              .frame(maxWidth: .infinity)
-          }
-          .borderedProminent
-        }
-        .font(.caption)
-      }
-      .padding()
-      .frame(maxWidth: 300)
-      .background(
-        RoundedRectangle(cornerRadius: 8)
-          .fill(Color.background)
-      )
-    }
-    .ignoresSafeArea()
-  }
-}
+

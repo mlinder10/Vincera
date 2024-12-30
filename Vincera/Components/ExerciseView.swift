@@ -73,14 +73,14 @@ struct ExerciseView<T: View>: View {
         .foregroundStyle(.red)
         .frame(maxWidth: .infinity)
         .padding(.vertical, 4)
-        .background(RoundedRectangle(cornerRadius: 6).fill(.regularMaterial))
+        .backgroundRect(radius: 6, fill: .regularMaterial)
         .onTapGesture { handleRemoveSet() }
       Text("Add Set")
         .font(.caption)
         .foregroundStyle(.accent)
         .frame(maxWidth: .infinity)
         .padding(.vertical, 4)
-        .background(RoundedRectangle(cornerRadius: 6).fill(.regularMaterial))
+        .backgroundRect(radius: 6, fill: .regularMaterial)
         .onTapGesture { handleAddSet() }
     }
   }

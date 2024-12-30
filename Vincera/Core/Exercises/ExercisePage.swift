@@ -63,32 +63,31 @@ fileprivate struct ExerciseDetailsView: View {
           Text(description)
             .font(.subheadline)
             .foregroundStyle(.secondary)
-          if let directions {
-            VStack(alignment: .leading, spacing: 8) {
-              Text("Directions")
-                .fontWeight(.semibold)
-                .padding(.vertical, 6)
-              ForEach(0..<directions.count, id: \.self) { index in
-                Text("\(index + 1). \(directions[index])")
-                  .font(.subheadline)
-                  .foregroundStyle(.secondary)
-              }
-            }
-            if let cues {
-              Text("Cues")
-                .fontWeight(.semibold)
-                .padding(.vertical, 6)
-              ForEach(cues, id: \.self) { cue in
-                Text("• \(cue)")
-                  .font(.subheadline)
-                  .foregroundStyle(.secondary)
-              }
-            }
-          }
+//          if let directions {
+//            VStack(alignment: .leading, spacing: 8) {
+//              Text("Directions")
+//                .fontWeight(.semibold)
+//                .padding(.vertical, 6)
+//              ForEach(0..<directions.count, id: \.self) { index in
+//                Text("\(index + 1). \(directions[index])")
+//                  .font(.subheadline)
+//                  .foregroundStyle(.secondary)
+//              }
+//            }
+//            if let cues {
+//              Text("Cues")
+//                .fontWeight(.semibold)
+//                .padding(.vertical, 6)
+//              ForEach(cues, id: \.self) { cue in
+//                Text("• \(cue)")
+//                  .font(.subheadline)
+//                  .foregroundStyle(.secondary)
+//              }
+//            }
+//          }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        Divider()
       }
     }
   }

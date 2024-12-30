@@ -94,11 +94,12 @@ struct StretchyHeaderModifier : ViewModifier {
 }
 
 extension Button {
+  @MainActor
   var bordered: some View {
     self
       .padding(.vertical, 8)
       .foregroundStyle(.accent)
-      .background(RoundedRectangle(cornerRadius: 8).fill(.ultraThickMaterial))
+      .backgroundRect(radius: 8, fill: .ultraThickMaterial)
   }
   
   @MainActor
@@ -106,5 +107,13 @@ extension Button {
     self
       .buttonStyle(.borderedProminent)
       .foregroundStyle(Color.background)
+  }
+}
+
+struct NoTapAnimationStyle: PrimitiveButtonStyle {
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .contentShape(Rectangle())
+      .onTapGesture(perform: configuration.trigger)
   }
 }

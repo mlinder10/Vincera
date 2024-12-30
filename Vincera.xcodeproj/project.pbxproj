@@ -53,12 +53,27 @@
 		1463B50B2CD99DAE006515C0 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50A2CD99DA3006515C0 /* Dialog.swift */; };
 		1463B50D2CD99DC0006515C0 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50C2CD99DB6006515C0 /* Detail.swift */; };
 		1463B50F2CD9AEA2006515C0 /* ActiveWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */; };
+		147C1B832CFAC4CE001A6634 /* RRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C1B822CFAC4C8001A6634 /* RRect.swift */; };
 		147F63442CCEB1F60016D6FA /* PastWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */; };
 		14BFF4A42CD1538200129D11 /* CustomSearchbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */; };
 		14C30DC82CD07E63007C08EE /* ImmutableExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C30DC72CD07E63007C08EE /* ImmutableExerciseView.swift */; };
 		14D085D82CE7D06A0026FBAE /* ExercisesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D085D72CE7D06A0026FBAE /* ExercisesTab.swift */; };
 		14D085DA2CE7D4B80026FBAE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D085D92CE7D4B50026FBAE /* Settings.swift */; };
+		14F6C3322D0781DA000BFDDB /* RestTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F6C3312D0781D7000BFDDB /* RestTimer.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		14D335C62D1663BB00DC2262 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		140399A92CD0726600D8CC4A /* Vincera.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Vincera.entitlements; sourceTree = "<group>"; };
@@ -109,12 +124,14 @@
 		1463B50A2CD99DA3006515C0 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		1463B50C2CD99DB6006515C0 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
 		1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkout.swift; sourceTree = "<group>"; };
+		147C1B822CFAC4C8001A6634 /* RRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRect.swift; sourceTree = "<group>"; };
 		147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastWorkoutView.swift; sourceTree = "<group>"; };
 		148B16622CD0499000043E58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearchbar.swift; sourceTree = "<group>"; };
 		14C30DC72CD07E63007C08EE /* ImmutableExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmutableExerciseView.swift; sourceTree = "<group>"; };
 		14D085D72CE7D06A0026FBAE /* ExercisesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesTab.swift; sourceTree = "<group>"; };
 		14D085D92CE7D4B50026FBAE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		14F6C3312D0781D7000BFDDB /* RestTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,18 +164,12 @@
 		14290AE32CCD6A97008AA83B /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				147C1B812CFAC4A6001A6634 /* Simple */,
 				1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */,
-				14290AE02CCD6A97008AA83B /* Notification.swift */,
-				1463B50A2CD99DA3006515C0 /* Dialog.swift */,
-				1463B50C2CD99DB6006515C0 /* Detail.swift */,
-				14290ADB2CCD6A97008AA83B /* CarouselView.swift */,
 				14290ADD2CCD6A97008AA83B /* ExerciseView.swift */,
 				14C30DC72CD07E63007C08EE /* ImmutableExerciseView.swift */,
 				14290ADE2CCD6A97008AA83B /* FilterRow.swift */,
-				14290ADF2CCD6A97008AA83B /* LabeledDivider.swift */,
-				14290AE12CCD6A97008AA83B /* NumberField.swift */,
-				14290AE22CCD6A97008AA83B /* TimerView.swift */,
-				14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */,
+				14F6C3312D0781D7000BFDDB /* RestTimer.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -300,6 +311,22 @@
 			path = Vincera;
 			sourceTree = "<group>";
 		};
+		147C1B812CFAC4A6001A6634 /* Simple */ = {
+			isa = PBXGroup;
+			children = (
+				1463B50C2CD99DB6006515C0 /* Detail.swift */,
+				1463B50A2CD99DA3006515C0 /* Dialog.swift */,
+				147C1B822CFAC4C8001A6634 /* RRect.swift */,
+				14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */,
+				14290ADF2CCD6A97008AA83B /* LabeledDivider.swift */,
+				14290AE22CCD6A97008AA83B /* TimerView.swift */,
+				14290AE12CCD6A97008AA83B /* NumberField.swift */,
+				14290ADB2CCD6A97008AA83B /* CarouselView.swift */,
+				14290AE02CCD6A97008AA83B /* Notification.swift */,
+			);
+			path = Simple;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -310,6 +337,7 @@
 				1426E6B12CC702A500F1F043 /* Sources */,
 				1426E6B22CC702A500F1F043 /* Frameworks */,
 				1426E6B32CC702A500F1F043 /* Resources */,
+				14D335C62D1663BB00DC2262 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
@@ -327,7 +355,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1530;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					1426E6B42CC702A500F1F043 = {
@@ -380,6 +408,7 @@
 				14290B152CCD6AB3008AA83B /* LabeledDivider.swift in Sources */,
 				14290B162CCD6AB3008AA83B /* Notification.swift in Sources */,
 				14290B172CCD6AB3008AA83B /* NumberField.swift in Sources */,
+				14F6C3322D0781DA000BFDDB /* RestTimer.swift in Sources */,
 				14290B182CCD6AB3008AA83B /* TimerView.swift in Sources */,
 				14D085DA2CE7D4B80026FBAE /* Settings.swift in Sources */,
 				14290B192CCD6AB3008AA83B /* ExercisePage.swift in Sources */,
@@ -394,6 +423,7 @@
 				14290B232CCD6AB3008AA83B /* ActiveWorkoutView.swift in Sources */,
 				14290B242CCD6AB3008AA83B /* WorkoutTab.swift in Sources */,
 				1463B50B2CD99DAE006515C0 /* Dialog.swift in Sources */,
+				147C1B832CFAC4CE001A6634 /* RRect.swift in Sources */,
 				14290B252CCD6AB3008AA83B /* StorageManager.swift in Sources */,
 				1406B7DF2CCEE18C00CB8BE3 /* HealthManager.swift in Sources */,
 				14290B262CCD6AB3008AA83B /* Day.swift in Sources */,

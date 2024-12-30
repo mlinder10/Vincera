@@ -129,7 +129,7 @@ fileprivate struct TrackerCell: View {
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .padding()
-    .background(RoundedRectangle(cornerRadius: 16).fill(.regularMaterial))
+    .backgroundRect(radius: 16, fill: .regularMaterial)
   }
 }
 
