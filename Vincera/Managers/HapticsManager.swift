@@ -8,17 +8,20 @@
 import Foundation
 import SwiftUI
 
-@MainActor
-final class Haptics {
-  static let shared = Haptics()
-  
-  private init() {}
-  
-  func play(_ feedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle) {
-    UIImpactFeedbackGenerator(style: feedbackStyle).impactOccurred()
-  }
-  
-  func notify(_ feedbackType: UINotificationFeedbackGenerator.FeedbackType) {
-    UINotificationFeedbackGenerator().notificationOccurred(feedbackType)
-  }
+final class Haptics: Sendable {
+    static let shared = Haptics()
+    
+    private init() {}
+    
+    func play(_ feedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle) {
+        DispatchQueue.main.sync {
+            UIImpactFeedbackGenerator(style: feedbackStyle).impactOccurred()
+        }
+    }
+    
+    func notify(_ feedbackType: UINotificationFeedbackGenerator.FeedbackType) {
+        DispatchQueue.main.sync {
+            UINotificationFeedbackGenerator().notificationOccurred(feedbackType)
+        }
+    }
 }

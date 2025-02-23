@@ -53,6 +53,8 @@
 		1463B50B2CD99DAE006515C0 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50A2CD99DA3006515C0 /* Dialog.swift */; };
 		1463B50D2CD99DC0006515C0 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50C2CD99DB6006515C0 /* Detail.swift */; };
 		1463B50F2CD9AEA2006515C0 /* ActiveWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */; };
+		1476E9A82D6ACC9700AAC013 /* ProductStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1476E9A72D6ACC9100AAC013 /* ProductStore.swift */; };
+		1478F73D2D270BCB005F0CD9 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478F73C2D270BC7005F0CD9 /* Timer.swift */; };
 		147C1B832CFAC4CE001A6634 /* RRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C1B822CFAC4C8001A6634 /* RRect.swift */; };
 		147F63442CCEB1F60016D6FA /* PastWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */; };
 		14BFF4A42CD1538200129D11 /* CustomSearchbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */; };
@@ -124,6 +126,8 @@
 		1463B50A2CD99DA3006515C0 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		1463B50C2CD99DB6006515C0 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
 		1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkout.swift; sourceTree = "<group>"; };
+		1476E9A72D6ACC9100AAC013 /* ProductStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStore.swift; sourceTree = "<group>"; };
+		1478F73C2D270BC7005F0CD9 /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		147C1B822CFAC4C8001A6634 /* RRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRect.swift; sourceTree = "<group>"; };
 		147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastWorkoutView.swift; sourceTree = "<group>"; };
 		148B16622CD0499000043E58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -249,14 +253,15 @@
 		14290AFF2CCD6A97008AA83B /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				14290AFC2CCD6A97008AA83B /* Protocols.swift */,
 				1417AB382CCDC599001BD894 /* Constants.swift */,
+				1478F73C2D270BC7005F0CD9 /* Timer.swift */,
 				14290AFD2CCD6A97008AA83B /* Split.swift */,
 				14290AF82CCD6A97008AA83B /* Day.swift */,
 				14290AF92CCD6A97008AA83B /* Exercise.swift */,
 				14290AFB2CCD6A97008AA83B /* VinceraSet.swift */,
 				14290AFA2CCD6A97008AA83B /* ListExercise.swift */,
 				14290AFE2CCD6A97008AA83B /* Workout.swift */,
-				14290AFC2CCD6A97008AA83B /* Protocols.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -274,6 +279,7 @@
 			children = (
 				14290B042CCD6A97008AA83B /* Router.swift */,
 				14290B052CCD6A97008AA83B /* SplitStore.swift */,
+				1476E9A72D6ACC9100AAC013 /* ProductStore.swift */,
 				14290B022CCD6A97008AA83B /* DayStore.swift */,
 				14290B062CCD6A97008AA83B /* WorkoutStore.swift */,
 				14290B032CCD6A97008AA83B /* ExerciseStore.swift */,
@@ -360,6 +366,7 @@
 				TargetAttributes = {
 					1426E6B42CC702A500F1F043 = {
 						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1620;
 					};
 				};
 			};
@@ -420,9 +427,11 @@
 				14290B202CCD6AB3008AA83B /* SplitEditor.swift in Sources */,
 				14290B212CCD6AB3008AA83B /* PlanTab.swift in Sources */,
 				14290B222CCD6AB3008AA83B /* SplitListPage.swift in Sources */,
+				1476E9A82D6ACC9700AAC013 /* ProductStore.swift in Sources */,
 				14290B232CCD6AB3008AA83B /* ActiveWorkoutView.swift in Sources */,
 				14290B242CCD6AB3008AA83B /* WorkoutTab.swift in Sources */,
 				1463B50B2CD99DAE006515C0 /* Dialog.swift in Sources */,
+				1478F73D2D270BCB005F0CD9 /* Timer.swift in Sources */,
 				147C1B832CFAC4CE001A6634 /* RRect.swift in Sources */,
 				14290B252CCD6AB3008AA83B /* StorageManager.swift in Sources */,
 				1406B7DF2CCEE18C00CB8BE3 /* HealthManager.swift in Sources */,
@@ -579,6 +588,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Vincera/Vincera.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -589,8 +599,10 @@
 				INFOPLIST_FILE = Vincera/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Vincera;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Enable access to HealthKit to log workouts";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Enable access to HealthKit to log workouts";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Enable access to HealthKit to log workouts";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs to send notifications when your rest timer ends.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -601,7 +613,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattlinder.vincera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -609,8 +621,9 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -619,6 +632,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Vincera/Vincera.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -629,8 +643,10 @@
 				INFOPLIST_FILE = Vincera/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Vincera;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Enable access to HealthKit to log workouts in Apple Health";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Enable access to HealthKit to log workouts";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Enable access to HealthKit to log workouts";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Enable access to HealthKit to log workouts";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs to send notifications when your rest timer ends.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -641,7 +657,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattlinder.vincera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -650,7 +666,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

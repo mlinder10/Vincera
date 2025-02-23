@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct RRect<T: ShapeStyle>: View {
-  let radius: CGFloat
-  let fill: T
-  
-  var body: some View {
-    RoundedRectangle(cornerRadius: radius).fill(fill)
-  }
+    let radius: CGFloat
+    let fill: T
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: radius).fill(fill)
+    }
 }
 
 extension View {
-  func backgroundRect<T: ShapeStyle>(radius: CGFloat, fill: T) -> some View {
-    self.background(RRect(radius: radius, fill: fill))
-  }
+    nonisolated func backgroundRect<T: ShapeStyle>(radius: CGFloat, fill: T) -> some View {
+        self.background(RRect(radius: radius, fill: fill))
+    }
 }

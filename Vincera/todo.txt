@@ -9,3 +9,11 @@ MARKETING
 - Strom
 - Frats
 - High School
+
+Guideline 2.1
+
+At the moment, the app does not offer paid services.
+
+Guideline 2.5.4
+
+The app no longer includes background audio and the "audio" setting has been removed from the most recent build's (20) Info.plist.
