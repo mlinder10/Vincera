@@ -13,10 +13,16 @@ struct DayEditor: View {
     @EnvironmentObject private var eStore: ExerciseStore
     @EnvironmentObject private var wStore: WorkoutStore
     @State private var day: Day
-    private var previous: [Exercise] { wStore.getPreviousExercises(listIds: day.exercises.flattened().map({ $0.listId })) }
+    private var previous: [Exercise] {
+        wStore.getPreviousExercises(
+            listIds: day.exercises
+                .flattened()
+                .map({ $0.listId })
+        )
+    }
     
     init(_ day: Day?) {
-        self.day = day?.cloneWithUUID() ?? Day()
+        self.day = day ?? Day()
     }
     
     var body: some View {
@@ -84,6 +90,7 @@ struct DayEditor: View {
     
     func handleSave() {
         do {
+            if day.name.count == 0 { day.name = "Untitled Workout" }
             if dStore.days.contains(where: { $0.id == day.id }) {
                 try dStore.editDay(day)
             } else {

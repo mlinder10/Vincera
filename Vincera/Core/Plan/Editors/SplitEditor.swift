@@ -107,6 +107,7 @@ struct SplitEditor: View {
     
     func handleSave() {
         do {
+            if split.name.count == 0 { split.name = "Untitled Split" }
             if sStore.splits.contains(where: { $0.id == split.id }) {
                 try sStore.editSplit(split)
             } else {
@@ -126,7 +127,13 @@ struct SplitDayEditor: View {
     @EnvironmentObject private var eStore: ExerciseStore
     @EnvironmentObject private var wStore: WorkoutStore
     @Binding var day: Day
-    private var previous: [Exercise] { wStore.getPreviousExercises(listIds: day.exercises.flattened().map({ $0.listId })) }
+    private var previous: [Exercise] {
+        wStore.getPreviousExercises(
+            listIds: day.exercises
+                .flattened()
+                .map({ $0.listId })
+        )
+    }
     
     var body: some View {
         List {

@@ -55,6 +55,7 @@
 		1463B50F2CD9AEA2006515C0 /* ActiveWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */; };
 		1476E9A82D6ACC9700AAC013 /* ProductStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1476E9A72D6ACC9100AAC013 /* ProductStore.swift */; };
 		1478F73D2D270BCB005F0CD9 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478F73C2D270BC7005F0CD9 /* Timer.swift */; };
+		147A0AEF2D6CCBB100CC7DED /* Compressable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147A0AEE2D6CCBAA00CC7DED /* Compressable.swift */; };
 		147C1B832CFAC4CE001A6634 /* RRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C1B822CFAC4C8001A6634 /* RRect.swift */; };
 		147F63442CCEB1F60016D6FA /* PastWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */; };
 		14BFF4A42CD1538200129D11 /* CustomSearchbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BFF4A32CD1538200129D11 /* CustomSearchbar.swift */; };
@@ -123,11 +124,13 @@
 		14290B0D2CCD6A97008AA83B /* exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = exercises.json; sourceTree = "<group>"; };
 		14290B0E2CCD6A97008AA83B /* VinceraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VinceraApp.swift; sourceTree = "<group>"; };
 		14290B0F2CCD6A97008AA83B /* todo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
+		14309C632D6D6395008652D1 /* VinceraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VinceraTests.swift; sourceTree = "<group>"; };
 		1463B50A2CD99DA3006515C0 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		1463B50C2CD99DB6006515C0 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
 		1463B50E2CD9AE90006515C0 /* ActiveWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkout.swift; sourceTree = "<group>"; };
 		1476E9A72D6ACC9100AAC013 /* ProductStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStore.swift; sourceTree = "<group>"; };
 		1478F73C2D270BC7005F0CD9 /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		147A0AEE2D6CCBAA00CC7DED /* Compressable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compressable.swift; sourceTree = "<group>"; };
 		147C1B822CFAC4C8001A6634 /* RRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRect.swift; sourceTree = "<group>"; };
 		147F63432CCEB1F60016D6FA /* PastWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastWorkoutView.swift; sourceTree = "<group>"; };
 		148B16622CD0499000043E58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -152,6 +155,7 @@
 		1426E6AC2CC702A500F1F043 = {
 			isa = PBXGroup;
 			children = (
+				14309C4A2D6D62F2008652D1 /* VinceraTests */,
 				14290B102CCD6A97008AA83B /* Vincera */,
 				1426E6B62CC702A500F1F043 /* Products */,
 			);
@@ -254,6 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				14290AFC2CCD6A97008AA83B /* Protocols.swift */,
+				147A0AEE2D6CCBAA00CC7DED /* Compressable.swift */,
 				1417AB382CCDC599001BD894 /* Constants.swift */,
 				1478F73C2D270BC7005F0CD9 /* Timer.swift */,
 				14290AFD2CCD6A97008AA83B /* Split.swift */,
@@ -315,6 +320,14 @@
 				14290B0F2CCD6A97008AA83B /* todo.txt */,
 			);
 			path = Vincera;
+			sourceTree = "<group>";
+		};
+		14309C4A2D6D62F2008652D1 /* VinceraTests */ = {
+			isa = PBXGroup;
+			children = (
+				14309C632D6D6395008652D1 /* VinceraTests.swift */,
+			);
+			path = VinceraTests;
 			sourceTree = "<group>";
 		};
 		147C1B812CFAC4A6001A6634 /* Simple */ = {
@@ -417,6 +430,7 @@
 				14290B172CCD6AB3008AA83B /* NumberField.swift in Sources */,
 				14F6C3322D0781DA000BFDDB /* RestTimer.swift in Sources */,
 				14290B182CCD6AB3008AA83B /* TimerView.swift in Sources */,
+				147A0AEF2D6CCBB100CC7DED /* Compressable.swift in Sources */,
 				14D085DA2CE7D4B80026FBAE /* Settings.swift in Sources */,
 				14290B192CCD6AB3008AA83B /* ExercisePage.swift in Sources */,
 				14290B1B2CCD6AB3008AA83B /* YoutubeView.swift in Sources */,
@@ -613,7 +627,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattlinder.vincera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -657,7 +671,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattlinder.vincera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

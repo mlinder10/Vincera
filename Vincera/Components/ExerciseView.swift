@@ -115,20 +115,23 @@ struct ExerciseView<T: View>: View {
     }
     
     func handleRemoveSet() {
-        guard let exercise = currentExercise else { return }
+        guard let currentExercise else { return }
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        if exercise.sets.count > 1 {
-            exercise.removeSet()
+        if currentExercise.sets.count > 1 {
+            exercises[scrollIndex ?? 0].removeSet()
             return
         }
         
         router.showDialog("Remove Exercise", role: .destructive) {
             if exercises.count == 1 { removeWrapper(exercises) }
-            else { exercises.removeAll(where: { $0.id == exercise.id }) }
+            else { exercises.removeAll(where: { $0.id == currentExercise.id }) }
         }
     }
     
-    func handleAddSet() { currentExercise?.addSet() }
+    func handleAddSet() {
+        guard exercises.count > 0 else { return }
+        exercises[scrollIndex ?? 0].addSet()
+    }
 }
 
 fileprivate struct SetsView: View {
@@ -146,7 +149,8 @@ fileprivate struct SetsView: View {
             Text(exercise.unitOne.rawValue)
             Text(exercise.unitTwo.rawValue)
             Text("")
-            ForEach(Array($exercise.sets.enumerated()), id: \.offset) { (index, set) in
+            ForEach($exercise.sets) { set in
+                let index = exercise.sets.firstIndex(of: set.wrappedValue) ?? 0
                 SetTypeView(type: set.type, index: index + 1)
                 if let vals = getPreviousValues(index) {
                     let isSelected = hasSelectedPrevious(vals, index: index)
@@ -154,8 +158,10 @@ fileprivate struct SetsView: View {
                         if isSelected {
                             Haptics.shared.notify(.warning)
                         } else {
-                            exercise.sets[index].valueOne = vals.0
-                            exercise.sets[index].valueTwo = vals.1
+                            var newSet = exercise.sets[index]
+                            newSet.valueOne = vals.0
+                            newSet.valueTwo = vals.1
+                            exercise.sets[index] = newSet
                         }
                     } label: {
                         Text("\(vals.0.formatted())x\(vals.1.formatted())")

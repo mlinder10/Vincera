@@ -24,17 +24,17 @@ struct SettingsView: View {
         .onChange(of: units) { handleChange($1) }
     }
     
-    // TODO: fix
+    // TODO: implement
     func handleChange(_ newValue: UnitSystem) {
         do {
-//            switch newValue {
-//            case .imperial:
-//                try wStore.kgToLb()
-//                break
-//            case .metric:
-//                try wStore.lbToKg()
-//                break
-//            }
+            switch newValue {
+            case .imperial:
+                try wStore.kgToLb()
+                break
+            case .metric:
+                try wStore.lbToKg()
+                break
+            }
         } catch {
             router.notify(.danger, "Failed to update units")
         }

@@ -24,7 +24,22 @@ struct ListExercise: Codable, Identifiable, Hashable, Sendable {
     let repsLow: Int
     let repsHigh: Int
     
-    init(id: String, name: String, description: String, directions: [String], cues: [String], image: String, videoId: String, bodyPart: String, primaryGroup: String, secondaryGroups: [String], exerciseType: String, equipmentType: String, repsLow: Int, repsHigh: Int) {
+    init(
+        id: String,
+        name: String,
+        description: String,
+        directions: [String],
+        cues: [String],
+        image: String,
+        videoId: String,
+        bodyPart: String,
+        primaryGroup: String,
+        secondaryGroups: [String],
+        exerciseType: String,
+        equipmentType: String,
+        repsLow: Int,
+        repsHigh: Int
+    ) {
         self.id = id
         self.name = name
         self.description = description
@@ -129,6 +144,18 @@ enum BodyPart: String, Identifiable, CaseIterable, Codable {
         case .legs: .blue
         case .calves: .purple
         case .abs: .pink
+        }
+    }
+    
+    func applicableMuscleGroups() -> [MuscleGroup] {
+        switch self {
+        case .arms: [.bis, .tris]
+        case .back: [.lats, .erectors, .rhomboids]
+        case .shoulders: [.frontDelts, .rearDelts, .sideDelts, .traps]
+        case .abs: [.abs, .obliques]
+        case .legs: [.quads, .hams, .glutes, .adductors, .abductors, .gastrocnemius, .soleus]
+        case .calves: [.soleus, .gastrocnemius]
+        case .chest: [.pecs]
         }
     }
 }

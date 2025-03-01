@@ -9,16 +9,22 @@ import SwiftUI
 
 private let ADD_SET_COUNT = 3
 
-@Observable
-final class Exercise: Codable, Identifiable, Hashable {
+struct Exercise: Codable, Identifiable, Hashable {
     var id: String
     var listId: String
     var rpe: Int
     var unitOne: ExerciseUnit
     var unitTwo: ExerciseUnit
     var sets: [VinceraSet]
-    
-    init(id: String, listId: String, rpe: Int, unitOne: ExerciseUnit, unitTwo: ExerciseUnit, sets: [VinceraSet]) {
+
+    init(
+        id: String,
+        listId: String,
+        rpe: Int,
+        unitOne: ExerciseUnit,
+        unitTwo: ExerciseUnit,
+        sets: [VinceraSet]
+    ) {
         self.id = id
         self.listId = listId
         self.rpe = rpe
@@ -26,7 +32,7 @@ final class Exercise: Codable, Identifiable, Hashable {
         self.unitTwo = unitTwo
         self.sets = sets
     }
-    
+
     init(_ listExercise: ListExercise) {
         self.id = UUID().uuidString
         self.listId = listExercise.id
@@ -35,7 +41,7 @@ final class Exercise: Codable, Identifiable, Hashable {
         self.unitTwo = ExerciseUnit.reps
         self.sets = [VinceraSet(), VinceraSet(), VinceraSet()]
     }
-    
+
     init(_ exercise: Exercise) {
         self.id = UUID().uuidString
         self.listId = exercise.listId
@@ -44,8 +50,13 @@ final class Exercise: Codable, Identifiable, Hashable {
         self.unitTwo = exercise.unitTwo
         self.sets = exercise.sets.map { _ in VinceraSet() }
     }
-    
-    init(listId: String, unitOne: ExerciseUnit = .weight, unitTwo: ExerciseUnit = .reps, sets: [Double]) {
+
+    init(
+        listId: String,
+        unitOne: ExerciseUnit = .weight,
+        unitTwo: ExerciseUnit = .reps,
+        sets: [Double]
+    ) {
         self.id = UUID().uuidString
         self.listId = listId
         self.rpe = 5
@@ -53,7 +64,7 @@ final class Exercise: Codable, Identifiable, Hashable {
         self.unitTwo = unitTwo
         self.sets = sets.map { VinceraSet(reps: $0) }
     }
-    
+
     func clone() -> Exercise {
         return Exercise(
             id: UUID().uuidString,
@@ -64,22 +75,22 @@ final class Exercise: Codable, Identifiable, Hashable {
             sets: sets.map { $0.clone() }
         )
     }
-    
-    func addSet() {
+
+    mutating func addSet() {
         sets.append(VinceraSet())
     }
-    
-    func removeSet() {
+
+    mutating func removeSet() {
         guard self.sets.count > 1 else { return }
         sets.removeLast()
     }
-    
+
     func maxValue(for unit: ExerciseUnit) -> (Double, Double)? {
         if unitOne == unit { return sets.maxValue(.one) }
         if unitTwo == unit { return sets.maxValue(.two) }
         return nil
     }
-    
+
     func canFillDown(_ index: Int) -> Bool {
         return (
             index + 1 < sets.count &&
@@ -89,11 +100,15 @@ final class Exercise: Codable, Identifiable, Hashable {
             sets[index+1].valueTwo == nil
         )
     }
-    
-    func fillDown(_ index: Int) {
+
+    mutating func fillDown(_ index: Int) {
         guard canFillDown(index) else { return }
         sets[index+1].valueOne = sets[index].valueOne
         sets[index+1].valueTwo = sets[index].valueTwo
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
@@ -155,7 +170,7 @@ extension Array<Exercise> {
         return self.first?.rpe
     }
     
-    func setRpe(_ rpe: Int) {
+    mutating func setRpe(_ rpe: Int) {
         for i in 0..<count {
             self[i].rpe = rpe
         }
@@ -164,6 +179,15 @@ extension Array<Exercise> {
 
 enum ExerciseUnit: String, CaseIterable, Identifiable, Codable {
     var id: String { self.rawValue }
+    var compressed: String {
+        switch self {
+        case .reps: "r"
+        case .weight: "w"
+        case .weightPlus: "p"
+        case .time: "t"
+        case .distance: "d"
+        }
+    }
     var icon: String {
         switch self {
         case .reps: "number"
@@ -175,6 +199,17 @@ enum ExerciseUnit: String, CaseIterable, Identifiable, Codable {
     }
     var name: String { self.rawValue }
     var label: some View { Label(name, systemImage: icon) }
+    
+    static func fromCompressed(_ compressed: String) -> ExerciseUnit? {
+        switch compressed {
+        case "r": return .reps
+        case "w": return .weight
+        case "p": return .weightPlus
+        case "t": return .time
+        case "d": return .distance
+        default: return nil
+        }
+    }
     
     case reps = "Reps"
     case weight = "Weight"

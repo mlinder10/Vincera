@@ -14,13 +14,13 @@ final class Haptics: Sendable {
     private init() {}
     
     func play(_ feedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle) {
-        DispatchQueue.main.sync {
+        DispatchQueue.main.async {
             UIImpactFeedbackGenerator(style: feedbackStyle).impactOccurred()
         }
     }
     
     func notify(_ feedbackType: UINotificationFeedbackGenerator.FeedbackType) {
-        DispatchQueue.main.sync {
+        DispatchQueue.main.async {
             UINotificationFeedbackGenerator().notificationOccurred(feedbackType)
         }
     }

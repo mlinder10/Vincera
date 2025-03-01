@@ -15,7 +15,7 @@ struct PremiumSplit: Identifiable {
 }
 
 @Observable
-final class Split: Codable, Identifiable, Hashable {
+final class Split: Codable, Identifiable, Hashable {    
     var id: String
     var name: String
     var description: String

@@ -28,7 +28,7 @@ struct CreateExercisePage: View {
                 }
             }
             Picker("Muscle Group", selection: $primaryGroup) {
-                ForEach(MuscleGroup.allCases) {
+                ForEach(bodyPart.applicableMuscleGroups()) {
                     Text($0.rawValue.capitalized).tag($0)
                 }
             }
@@ -43,6 +43,7 @@ struct CreateExercisePage: View {
                 }
             }
         }
+        .onChange(of: bodyPart) { primaryGroup = $1.applicableMuscleGroups().first! }
         .scrollDismissesKeyboard(.interactively)
         .navigationTitle("Create Exercise")
         .navigationBarTitleDisplayMode(.inline)

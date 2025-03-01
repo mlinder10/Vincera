@@ -87,7 +87,7 @@ final class ExerciseStore: ObservableObject {
         }
     }
 
-    func fetchRemoteExercises() async throws -> [ListExercise] {
+    private func fetchRemoteExercises() async throws -> [ListExercise] {
         guard let url = URL(string: EXERCISE_LIST_URL) else {
             throw URLError(.badURL)
         }

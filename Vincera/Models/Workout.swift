@@ -55,9 +55,11 @@ final class Workout: Codable, Identifiable, Hashable {
     }
     
     func fillEmpty() {
-        for exercise in exercises.flattened() {
-            for i in 0..<exercise.sets.count {
-                exercise.sets[i].fillValues()
+        for i in 0..<exercises.count {
+            for j in 0..<exercises[i].count {
+                for k in 0..<exercises[i][j].sets.count {
+                    exercises[i][j].sets[k].fillValues()
+                }
             }
         }
     }

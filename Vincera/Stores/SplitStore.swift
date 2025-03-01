@@ -20,13 +20,17 @@ final class SplitStore: ObservableObject {
         let meta: SplitMeta? = try? StorageManager.shared.read(.splitMeta)
         self.meta = meta ?? SplitMeta(splitId: nil, dayIndex: nil)
         current = VINCERA_SPLITS.first { $0.id == self.meta.splitId } ?? splits?.first { $0.id == self.meta.splitId }
-        if let current {
-            if let dayIndex = self.meta.dayIndex {
-                day = current.days[dayIndex]
-            } else {
-                day = current.days.first
-            }
+        guard let current else { return }
+        guard let dayIndex = self.meta.dayIndex else {
+            day = current.days.first
+            return
         }
+        if dayIndex >= current.days.count {
+            self.meta.dayIndex = 0
+            self.day = current.days.first
+            return
+        }
+        day = current.days[dayIndex]
     }
     
     func createSplit(_ split: Split) throws {
@@ -76,6 +80,7 @@ final class SplitStore: ObservableObject {
         let prev = self.current
         self.current = split
         meta.splitId = split?.id
+        meta.dayIndex = 0
         do {
             try StorageManager.shared.write(.splitMeta, meta)
         } catch {

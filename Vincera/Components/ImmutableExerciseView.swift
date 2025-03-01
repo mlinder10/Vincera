@@ -96,18 +96,8 @@ fileprivate struct SetsView: View {
             ForEach(Array(exercise.sets.enumerated()), id: \.offset) { (index, set) in
                 SetTypeView(type: set.type, index: index + 1)
                 if let vals = getPreviousValues(index) {
-                    let isSelected = hasSelectedPrevious(vals, index: index)
-                    Button {
-                        if isSelected {
-                            Haptics.shared.notify(.warning)
-                        } else {
-                            exercise.sets[index].valueOne = vals.0
-                            exercise.sets[index].valueTwo = vals.1
-                        }
-                    } label: {
-                        Text("\(vals.0.formatted())x\(vals.1.formatted())")
-                    }
-                    .foregroundStyle(.secondary)
+                    Text("\(vals.0.formatted())x\(vals.1.formatted())")
+                        .foregroundStyle(.secondary)
                 } else {
                     Text("-")
                         .foregroundStyle(.secondary)

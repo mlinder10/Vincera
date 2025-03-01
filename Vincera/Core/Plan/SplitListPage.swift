@@ -14,12 +14,12 @@ struct SplitListPage: View {
     
     var body: some View {
         List {
-            Section("Premium Splits") {
-                ForEach(PREMIUM_SPLITS) { split in
-                    PremiumSplitCell(split: split)
-                        .plainListStyle
-                }
-            }
+//            Section("Premium Splits") {
+//                ForEach(PREMIUM_SPLITS) { split in
+//                    PremiumSplitCell(split: split)
+//                        .plainListStyle
+//                }
+//            }
             if !sStore.splits.isEmpty {
                 Section("Custom Splits") {
                     ForEach($sStore.splits) { $split in

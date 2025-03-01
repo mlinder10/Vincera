@@ -33,11 +33,13 @@ struct ExercisePage: View {
                         showHeader = frame.maxY < 200
                         width = frame.maxX
                     }
-                    ExerciseDetailsView(
-                        description: exercise.description,
-                        directions: exercise.directions,
-                        cues: exercise.cues
-                    )
+                    if !isCustom {
+                        ExerciseDetailsView(
+                            description: exercise.description,
+                            directions: exercise.directions,
+                            cues: exercise.cues
+                        )
+                    }
                     if isCustom { DeleteButtonView(exercise: exercise) }
                 }
                 .padding(.bottom, 96)

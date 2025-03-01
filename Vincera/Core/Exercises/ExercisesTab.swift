@@ -35,11 +35,10 @@ struct ExercisesTab: View {
         .toolbar {
             if let onAdd, !selected.isEmpty {
                 ToolbarItem(placement: .bottomBar) {
-                    Button { onAdd(selected) } label: {
-                        Text("Add \(selected.count) Exercise\(selected.count == 1 ? "" : "s")")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .borderedProminent
+                    Text("Add \(selected.count) Exercise\(selected.count == 1 ? "" : "s")")
+                        .frame(maxWidth: .infinity)
+                        .borderedProminent
+                        .onTapGesture { onAdd(selected) }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {

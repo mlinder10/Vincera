@@ -36,6 +36,7 @@ struct TimerData {
         lastStart = nil
         vibrationTimer?.invalidate()
         vibrationTimer = nil
+        cancelNotification()
     }
     
     func getPercentage() -> Double {

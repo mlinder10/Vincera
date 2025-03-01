@@ -93,7 +93,7 @@ struct StretchyHeaderModifier : ViewModifier {
     }
 }
 
-extension Button {
+extension View {
     var bordered: some View {
         self
             .padding(.vertical, 8)

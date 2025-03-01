@@ -42,25 +42,6 @@ extension Day {
     }
 }
 
-extension Exercise {
-    enum CodingKeys: String, CodingKey {
-        case _id = "id"
-        case _listId = "listId"
-        case _rpe = "rpe"
-        case _unitOne = "unitOne"
-        case _unitTwo = "unitTwo"
-        case _sets = "sets"
-    }
-    
-    static func == (lhs: Exercise, rhs: Exercise) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
-    }
-}
-
 extension Workout {
     enum CodingKeys: String, CodingKey {
         case _id = "id"

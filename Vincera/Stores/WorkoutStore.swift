@@ -93,7 +93,6 @@ final class WorkoutStore: ObservableObject {
         timer.reset()
         active.end = Date()
         try createWorkout(active)
-//        try? checkForPrs(active)
         DispatchQueue.main.async {
             HealthManager.shared.endWorkout()
             self.active = nil
@@ -101,7 +100,7 @@ final class WorkoutStore: ObservableObject {
     }
     
     func getFiltered(_ search: String, _ timeframe: Timeframe) -> [Workout] {
-        return getWorkouts().filter { search.isEmpty || $0.name.contains(search) }
+        return getWorkouts(timeframe: timeframe).filter { search.isEmpty || $0.name.contains(search) }
     }
     
     func getWorkouts(timeframe: Timeframe = .allTime) -> [Workout] {
@@ -204,8 +203,8 @@ final class WorkoutStore: ObservableObject {
         return prs
     }
     
-//    // TODO: fix
-//    func lbToKg() throws {
+    // TODO: implement
+    func lbToKg() throws {
 //        if meta.units == .metric { return }
 //        meta.units = .metric
 //        do {
@@ -224,10 +223,10 @@ final class WorkoutStore: ObservableObject {
 //                }
 //            }
 //        }
-//    }
-//    
-//    // TODO: fix
-//    func kgToLb() throws {
+    }
+    
+    // TODO: implement
+    func kgToLb() throws {
 //        if meta.units == .imperial { return }
 //        meta.units = .imperial
 //        do {
@@ -246,7 +245,7 @@ final class WorkoutStore: ObservableObject {
 //                }
 //            }
 //        }
-//    }
+    }
 }
 
 
