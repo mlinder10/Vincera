@@ -47,6 +47,9 @@ struct VinceraApp: App {
 struct RootView: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var wStore: WorkoutStore
+    @EnvironmentObject private var sStore: SplitStore
+    @State private var showImportAlert = false
+    @State private var importedSplit: Split? = nil
     
     var body: some View {
         TabView(selection: $router.tab) {
@@ -87,18 +90,58 @@ struct RootView: View {
         .notificationDisplayer
         .dialogDisplayer
         .detailDisplayer
-        .sheet(isPresented: $router.isShowingActiveWorkout) {
-            NavigationStack(path: $router.activeWorkoutRoutes) {
-                if let workout = wStore.active {
-                    ActiveWorkoutView(workout: Binding(get: { workout }, set: { wStore.active = $0 }))
-                        .rootNavigator
-                } else {
-                    Text("No active workout")
+        .sheet(isPresented: $router.isShowingActiveWorkout, content: { sheetContent })
+        .onOpenURL(perform: handleOpenURL)
+        .alert("Import Split", isPresented: $showImportAlert, actions: { importAlertView}, message: { importAlertMessage })
+    }
+    
+    private var sheetContent: some View {
+        NavigationStack(path: $router.activeWorkoutRoutes) {
+            if let workout = wStore.active {
+                ActiveWorkoutView(workout: Binding(get: { workout }, set: { wStore.active = $0 }))
+                    .rootNavigator
+            } else {
+                Text("No active workout")
+            }
+        }
+        .notificationDisplayer
+        .dialogDisplayer
+        .detailDisplayer
+    }
+    
+    private var importAlertView: some View {
+        Group {
+            Button("Save") {
+                if let split = importedSplit {
+                    do {
+                        try sStore.createSplit(split)
+                        importedSplit = nil
+                    } catch {
+                        print("Failed to save imported split: \(error)")
+                    }
                 }
             }
-            .notificationDisplayer
-            .dialogDisplayer
-            .detailDisplayer
+            Button("Cancel", role: .cancel) {
+                importedSplit = nil
+            }
+        }
+    }
+    
+    private var importAlertMessage: some View {
+        Group {
+            if let importedSplit {
+                Text("Would you like to save the split '\(importedSplit.name)'?")
+            } else {
+                Text("Would you like to save this split?")
+            }
+        }
+    }
+    
+    private func handleOpenURL(_ url: URL) {
+        if let split = SplitSharingManager.shared.handleIncomingURL(url) {
+            importedSplit = split
+            showImportAlert = true
+            router.tab = .plan
         }
     }
 }

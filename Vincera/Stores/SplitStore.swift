@@ -64,7 +64,7 @@ final class SplitStore: ObservableObject {
     }
     
     func deleteSplit(_ split: Split) throws {
-        if split.isBuiltin() { return }
+//        if split.isBuiltin() { return }
         guard let index = splits.firstIndex(where: { $0.id == split.id }) else { return }
         splits.remove(at: index)
         do {

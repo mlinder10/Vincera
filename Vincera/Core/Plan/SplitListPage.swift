@@ -71,11 +71,14 @@ struct SplitCell: View {
                         Button { router.goTo(.splitEditor(split)) } label: {
                             Label("Edit", systemImage: "pencil")
                         }
-                        if !split.isBuiltin() {
+                        Button { handleShare() } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+//                        if !split.isBuiltin() {
                             Button(role: .destructive) { handleDelete() } label: {
                                 Label("Delete", systemImage: "trash")
                             }
-                        }
+//                        }
                     }
                     .font(.system(size: 16))
                 }
@@ -129,6 +132,10 @@ struct SplitCell: View {
         } catch {
             router.notify(.danger, "Error selecting \(split.name)")
         }
+    }
+    
+    func handleShare() {
+        SplitSharingManager.shared.shareSplit(from: split)
     }
     
     func handleDelete() {

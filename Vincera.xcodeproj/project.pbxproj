@@ -10,6 +10,8 @@
 		1406B7DD2CCEE13100CB8BE3 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1406B7DC2CCEE13100CB8BE3 /* HapticsManager.swift */; };
 		1406B7DF2CCEE18C00CB8BE3 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1406B7DE2CCEE18C00CB8BE3 /* HealthManager.swift */; };
 		1406B7E12CCEE24F00CB8BE3 /* CreateExercisePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1406B7E02CCEE24F00CB8BE3 /* CreateExercisePage.swift */; };
+		140A65732D72B2BB008247D4 /* ShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140A65722D72B2B1008247D4 /* ShareManager.swift */; };
+		140A65752D72B5EB008247D4 /* ShareSplitLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140A65742D72B5E4008247D4 /* ShareSplitLink.swift */; };
 		1417AB392CCDC599001BD894 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1417AB382CCDC599001BD894 /* Constants.swift */; };
 		14290B112CCD6AB3008AA83B /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290ADB2CCD6A97008AA83B /* CarouselView.swift */; };
 		14290B132CCD6AB3008AA83B /* ExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14290ADD2CCD6A97008AA83B /* ExerciseView.swift */; };
@@ -83,6 +85,8 @@
 		1406B7DC2CCEE13100CB8BE3 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		1406B7DE2CCEE18C00CB8BE3 /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		1406B7E02CCEE24F00CB8BE3 /* CreateExercisePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateExercisePage.swift; sourceTree = "<group>"; };
+		140A65722D72B2B1008247D4 /* ShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareManager.swift; sourceTree = "<group>"; };
+		140A65742D72B5E4008247D4 /* ShareSplitLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSplitLink.swift; sourceTree = "<group>"; };
 		1417AB382CCDC599001BD894 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1426E6B52CC702A500F1F043 /* Vincera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vincera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14290ADB2CCD6A97008AA83B /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
@@ -178,6 +182,7 @@
 				14C30DC72CD07E63007C08EE /* ImmutableExerciseView.swift */,
 				14290ADE2CCD6A97008AA83B /* FilterRow.swift */,
 				14F6C3312D0781D7000BFDDB /* RestTimer.swift */,
+				140A65742D72B5E4008247D4 /* ShareSplitLink.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -248,6 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				14290AF62CCD6A97008AA83B /* StorageManager.swift */,
+				140A65722D72B2B1008247D4 /* ShareManager.swift */,
 				1406B7DE2CCEE18C00CB8BE3 /* HealthManager.swift */,
 				1406B7DC2CCEE13100CB8BE3 /* HapticsManager.swift */,
 			);
@@ -423,6 +429,8 @@
 				14290B112CCD6AB3008AA83B /* CarouselView.swift in Sources */,
 				1417AB392CCDC599001BD894 /* Constants.swift in Sources */,
 				1463B50D2CD99DC0006515C0 /* Detail.swift in Sources */,
+				140A65752D72B5EB008247D4 /* ShareSplitLink.swift in Sources */,
+				140A65732D72B2BB008247D4 /* ShareManager.swift in Sources */,
 				14290B132CCD6AB3008AA83B /* ExerciseView.swift in Sources */,
 				14290B142CCD6AB3008AA83B /* FilterRow.swift in Sources */,
 				14290B152CCD6AB3008AA83B /* LabeledDivider.swift in Sources */,

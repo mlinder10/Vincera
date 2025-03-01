@@ -36,11 +36,19 @@ final class Split: Codable, Identifiable, Hashable {
     }
     
     func clone() -> Split {
-        return Split(id: UUID().uuidString, name: name, description: description, days: days.map { $0.clone() })
+        return Split(
+            id: UUID().uuidString,
+            name: name,
+            description: description,
+            days: days.map { $0.clone() })
     }
     
     func cloneWithUUID() -> Split {
-        return Split(id: id, name: name, description: description, days: days.map { $0.clone() })
+        return Split(
+            id: id,
+            name: name,
+            description: description,
+            days: days.map { $0.clone() })
     }
     
     func addDay() {
