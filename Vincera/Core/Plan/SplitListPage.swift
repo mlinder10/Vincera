@@ -8,6 +8,7 @@
 import SwiftUI
 import Charts
 
+
 struct SplitListPage: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var sStore: SplitStore
@@ -64,6 +65,9 @@ struct SplitCell: View {
             }
             Button { router.goTo(.splitEditor(split)) } label: {
               Label("Edit", systemImage: "pencil")
+            }
+            Button { handleShare() } label: {
+              Label("Share", systemImage: "square.and.arrow.up")
             }
             if !split.isBuiltin() {
               Button(role: .destructive) { handleDelete() } label: {
@@ -123,6 +127,10 @@ struct SplitCell: View {
     } catch {
       router.notify(.danger, "Error selecting \(split.name)")
     }
+  }
+  
+  func handleShare() {
+    SplitSharingManager.shared.shareSplit(from: split)
   }
   
   func handleDelete() {

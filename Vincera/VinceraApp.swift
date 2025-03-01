@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 @main
 struct VinceraApp: App {
@@ -35,6 +36,9 @@ struct VinceraApp: App {
 struct RootView: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var wStore: WorkoutStore
+  @EnvironmentObject private var sStore: SplitStore
+  @State private var showImportAlert = false
+  @State private var importedSplit: Split? = nil
   
   var body: some View {
     TabView(selection: $router.tab) {
@@ -88,6 +92,35 @@ struct RootView: View {
       .notificationDisplayer
       .dialogDisplayer
       .detailDisplayer
+    }
+    .onOpenURL { url in
+      if let split = SplitSharingManager.shared.handleIncomingURL(url) {
+        importedSplit = split
+        showImportAlert = true
+        // Switch to the Plan tab
+        router.tab = .plan
+      }
+    }
+    .alert("Import Split", isPresented: $showImportAlert) {
+      Button("Save") {
+        if let split = importedSplit {
+          do {
+            try sStore.createSplit(split)
+            importedSplit = nil
+          } catch {
+            print("Failed to save imported split: \(error)")
+          }
+        }
+      }
+      Button("Cancel", role: .cancel) {
+        importedSplit = nil
+      }
+    } message: {
+      if let split = importedSplit {
+        Text("Would you like to save the split '\(split.name)'?")
+      } else {
+        Text("Would you like to save this split?")
+      }
     }
   }
 }

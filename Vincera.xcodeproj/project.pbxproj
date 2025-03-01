@@ -60,6 +60,7 @@
 		14D085D82CE7D06A0026FBAE /* ExercisesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D085D72CE7D06A0026FBAE /* ExercisesTab.swift */; };
 		14D085DA2CE7D4B80026FBAE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D085D92CE7D4B50026FBAE /* Settings.swift */; };
 		14F6C3322D0781DA000BFDDB /* RestTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F6C3312D0781D7000BFDDB /* RestTimer.swift */; };
+		C7DC17282D728D7300F86D30 /* SplitSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DC17272D728D4C00F86D30 /* SplitSharing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -132,6 +133,7 @@
 		14D085D72CE7D06A0026FBAE /* ExercisesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesTab.swift; sourceTree = "<group>"; };
 		14D085D92CE7D4B50026FBAE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		14F6C3312D0781D7000BFDDB /* RestTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimer.swift; sourceTree = "<group>"; };
+		C7DC17272D728D4C00F86D30 /* SplitSharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitSharing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,6 +289,7 @@
 				14290B082CCD6A97008AA83B /* Errors.swift */,
 				14290B092CCD6A97008AA83B /* Extensions.swift */,
 				14290B0A2CCD6A97008AA83B /* Modifiers.swift */,
+				C7DC17272D728D4C00F86D30 /* SplitSharing.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 				1463B50B2CD99DAE006515C0 /* Dialog.swift in Sources */,
 				147C1B832CFAC4CE001A6634 /* RRect.swift in Sources */,
 				14290B252CCD6AB3008AA83B /* StorageManager.swift in Sources */,
+				C7DC17282D728D7300F86D30 /* SplitSharing.swift in Sources */,
 				1406B7DF2CCEE18C00CB8BE3 /* HealthManager.swift in Sources */,
 				14290B262CCD6AB3008AA83B /* Day.swift in Sources */,
 				14290B272CCD6AB3008AA83B /* Exercise.swift in Sources */,
@@ -583,7 +587,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Vincera/Preview Content\"";
-				DEVELOPMENT_TEAM = T6D837MWJ7;
+				DEVELOPMENT_TEAM = 36ZCM7H2CQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vincera/Info.plist;
@@ -623,7 +627,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Vincera/Preview Content\"";
-				DEVELOPMENT_TEAM = T6D837MWJ7;
+				DEVELOPMENT_TEAM = 36ZCM7H2CQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vincera/Info.plist;
