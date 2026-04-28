@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/mattlinder/PersonalProjects/Swift/LiftLogs/Vincera.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>

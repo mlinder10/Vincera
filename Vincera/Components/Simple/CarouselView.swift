@@ -67,8 +67,8 @@ public struct InfiniteCarousel<Content: View, T: Any>: View {
                         .cornerRadius(cornerRadius)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .rotation3DEffect(transition == .rotation3D ? getRotation(positionMinX) : .degrees(0), axis: (x: 0, y: 1, z: 0))
-                        .opacity(transition == .opacity ? getValue(positionMinX) : 1)
-                        .scaleEffect(isScaleEnabled && transition == .scale ? getValue(positionMinX) : 1)
+                        .opacity(transition == .opacity ? getValue(for: positionMinX, in: proxy) : 1)
+                        .scaleEffect(isScaleEnabled && transition == .scale ? getValue(for: positionMinX, in: proxy) : 1)
                         .padding(.horizontal, horizontalPadding)
                 }
                 .tag(index)
@@ -121,9 +121,14 @@ extension InfiniteCarousel {
     }
     
     // Get the value for scale and opacity modifiers
-    private func getValue(_ positionX: CGFloat) -> CGFloat {
-        let scale = 1 - abs(positionX / UIScreen.main.bounds.width)
-        return scale
+    private func getValue(for positionX: CGFloat, in proxy: GeometryProxy) -> CGFloat {
+        let viewWidth = proxy.size.width // Gets the exact width of the carousel item
+        
+        // Ensure we don't divide by zero if layout isn't drawn yet
+        guard viewWidth > 0 else { return 1.0 }
+        
+        let scale = 1 - (abs(positionX) / viewWidth)
+        return max(0.0, min(1.0, scale)) // Keep it between 0.0 and 1.0
     }
 }
 

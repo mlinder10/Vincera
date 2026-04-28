@@ -14,7 +14,6 @@ struct YouTubeView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         let urlString = "https://www.youtube.com/embed/\(videoID)?autoplay=1&loop=1&playlist=\(videoID)"
-        //    let urlString = "https://www.youtube.com/embed/\(videoID)"
         if let url = URL(string: urlString) {
             webView.load(URLRequest(url: url))
         }
@@ -22,6 +21,19 @@ struct YouTubeView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        // Update view if needed
+    }
+}
+
+struct YouTubeShortView: UIViewRepresentable {
+    let videoUrl: String
+
+    func makeUIView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        guard let url = URL(string: "\(videoUrl)?autoplay=1&loop=1") else { return }
+        uiView.scrollView.isScrollEnabled = false
+        uiView.load(URLRequest(url: url))
     }
 }

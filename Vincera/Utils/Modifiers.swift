@@ -26,6 +26,24 @@ extension Text {
 }
 
 extension View {
+    func backgroundRect<T: ShapeStyle>(radius: CGFloat, fill: T) -> some View {
+        self.background(RoundedRectangle(cornerRadius: radius).fill(fill))
+    }
+    
+    var bordered: some View {
+        self
+            .padding(.vertical, 8)
+            .foregroundStyle(.accent)
+            .backgroundRect(radius: 8, fill: .ultraThickMaterial)
+    }
+    
+    var borderedProminent: some View {
+        self
+            .padding(.vertical, 8)
+            .foregroundStyle(Color.background)
+            .backgroundRect(radius: 8, fill: Color.accentColor)
+    }
+    
     var plainListStyle: some View {
         self
             .listRowBackground(Color.clear)
@@ -38,6 +56,41 @@ extension View {
     
     func readingFrame(coordinateSpace: CoordinateSpace = .global, onChange: @escaping (_ frame: CGRect) -> ()) -> some View {
         background(FrameReader(coordinateSpace: coordinateSpace, onChange: onChange))
+    }
+    
+    var hiddenNavigation: some View {
+        self
+            .navigationBarBackButtonHidden()
+            .toolbar(.hidden, for: .navigationBar)
+            .overlay(alignment: .topLeading) {
+                Button { Router.shared.pop() } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title2)
+                        .padding(4)
+                }
+                .buttonBorderShape(.circle)
+                .buttonStyle(.glass)
+                .padding(.leading)
+            }
+    }
+    
+    // MARK: mocking
+    
+    var mockEnvironment: some View {
+        self
+            .environmentObject(MOCK_DATA_STORE)
+    }
+    
+    var mockNavigation: some View {
+        NavigationStack {
+            self
+        }
+    }
+    
+    func mockNavigation(path: Binding<NavigationPath>) -> some View {
+        NavigationStack(path: path) {
+            self
+        }
     }
 }
 
@@ -93,26 +146,3 @@ struct StretchyHeaderModifier : ViewModifier {
     }
 }
 
-extension View {
-    var bordered: some View {
-        self
-            .padding(.vertical, 8)
-            .foregroundStyle(.accent)
-            .backgroundRect(radius: 8, fill: .ultraThickMaterial)
-    }
-    
-    var borderedProminent: some View {
-        self
-            .padding(.vertical, 8)
-            .foregroundStyle(Color.background)
-            .backgroundRect(radius: 8, fill: Color.accentColor)
-    }
-}
-
-struct NoTapAnimationStyle: PrimitiveButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .contentShape(Rectangle())
-            .onTapGesture(perform: configuration.trigger)
-    }
-}

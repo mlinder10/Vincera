@@ -10,15 +10,13 @@ import SwiftUI
 fileprivate let CIRCLE_SIZE: CGFloat = 164
 
 struct ActiveWorkoutView: View {
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var sStore: SplitStore
-    @EnvironmentObject private var wStore: WorkoutStore
-    @Binding var workout: Workout
+    @EnvironmentObject private var store: DataStore
+    @ObservedObject var workout: Builder.ActiveWorkout
     @State private var validate = false
-    private var previous: [Exercise] {
-        wStore.getPreviousExercises(
+    private var previous: [Writers.Exercise] {
+        store.getPreviousExercises(
             listIds: workout
-                .exercises
+                .wrappers
                 .flattened()
                 .map({ $0.listId })
         )
@@ -26,48 +24,60 @@ struct ActiveWorkoutView: View {
     
     var body: some View {
         ZStack {
-            List {
-                exercises
-                addExerciseButton
-                saveWorkoutButton
+            ScrollView {
+                LazyVStack {
+                    Section(header: headerTextFieldsView, content: {})
+                    exercises
+                    addExerciseButton
+                    saveWorkoutButton
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 72)
             }
-            .listRowSpacing(4)
-            .listRowSeparator(.visible)
-            .scrollIndicators(.hidden)
             .scrollDismissesKeyboard(.interactively)
             .padding(.bottom, 32)
+            
             RestTimerView()
                 .padding(.horizontal)
+                .frame(maxHeight: .infinity, alignment: .bottom)
         }
-        .navigationTitle(workout.name)
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button(role: .destructive) {
-                    router.showDialog("Cancel Workout", role: .destructive, action: handleCancelWorkout)
-                } label: {
-                    Text("Cancel")
-                        .foregroundStyle(.red)
-                }
+                BrandButton("Cancel", role: .destructive, action: handleCancelWorkout)
+                    .withAlert(title: "Cancel Workout")
             }
             ToolbarItem(placement: .topBarTrailing) {
-                TimerView(start: workout.start)
+                TimerView(start: workout.startedAt)
             }
         }
     }
     
-    var exercises: some View {
-        ForEach($workout.exercises, id: \.self) { $wrapper in
+    private var headerTextFieldsView: some View {
+        VStack {
+            TextField("Name", text: $workout.name)
+                .textFieldStyle(.roundedBorder)
+                .autocorrectionDisabled()
+            TextField("Notes", text: $workout.notes, axis: .vertical)
+                .textFieldStyle(.roundedBorder)
+                .lineLimit(3, reservesSpace: true)
+                .autocorrectionDisabled()
+        }
+    }
+    
+    private var exercises: some View {
+        DraggableForEach($workout.wrappers, withDividers: true) { wrapper in
             ExerciseView(
-                exercises: $wrapper,
+                wrapper: wrapper,
                 previous: previous,
                 showsRpe: true,
                 validate: validate,
-                removeWrapper: { workout.exercises.remove($0) }) {
+                removeWrapper: { wrapper in
+                    workout.wrappers.removeAll(where: { $0.id == wrapper.id })
+                }) {
                     MenuOptions(
-                        wrapper: $wrapper,
-                        hidden: workout.exercises.flattened().map({ $0.listId }),
-                        removeExercise: { workout.exercises.remove(wrapper) }
+                        wrapper: wrapper,
+                        hidden: workout.wrappers.flattened().map({ $0.listId }),
+                        removeExercise: { workout.wrappers.removeAll(where: { $0.id == wrapper.id }) }
                     )
                 }
                 .padding(.vertical, 24)
@@ -75,60 +85,57 @@ struct ActiveWorkoutView: View {
                 .listRowBackground(Rectangle().fill(.clear))
                 .listRowSeparator(.visible)
         }
-        .onMove { workout.exercises.move(from: $0, to: $1) }
     }
     
-    var addExerciseButton: some View {
-        Button {
-            router.goTo(
-                .exerciseList(
-                    workout.exercises.getListIds(),
-                    nil,
-                    { workout.exercises.addExercises($0); router.goBack() }
+    private var addExerciseButton: some View {
+        BrandButton("Add Exercise") {
+            Router.shared.push(
+                ExerciseListRoute(
+                    hidden: workout.wrappers.flattened().map({ $0.listId }),
+                    replacementId: nil,
+                    onTap: nil,
+                    onAdd: { workout.wrappers.addExercises($0); Router.shared.pop() }
                 )
             )
-        } label: {
-            Text("Add Exercise")
-                .frame(maxWidth: .infinity, alignment: .center)
         }
-        .bordered
-        .plainListStyle
+        .secondary
     }
     
-    var saveWorkoutButton: some View {
-        Button { handleStartSave() } label: {
-            Text("End Workout")
-                .frame(maxWidth: .infinity, alignment: .center)
-        }
-        .borderedProminent
-        .plainListStyle
-    }
-    
-    func handleStartSave() {
-        guard workout.isValid() else {
-            validate = true
-            router.showDialog("End With Empty Fields", role: .destructive) {
-                workout.fillEmpty()
-                handleEndWorkout()
+    private var saveWorkoutButton: some View {
+        BrandButton("End Workout") {
+            Keyboard.dismiss()
+            
+            guard workout.isValid() else {
+                validate = true
+                return
             }
-            return
+            handleEndWorkout()
         }
-        router.showDialog("End Workout", action: handleEndWorkout)
+        .withAlert(title: "End Workout")
+        .primary
     }
     
-    func handleCancelWorkout() {
-        router.isShowingActiveWorkout = false
-        wStore.cancelWorkout()
+    private func handleCancelWorkout() {
+        Router.shared.showWorkout = false
+        store.cancelWorkout()
     }
     
-    func handleEndWorkout() {
+    private func handleEndWorkout() {
         do {
-            router.isShowingActiveWorkout = false
-            try wStore.endWorkout()
-            if sStore.day?.id == workout.dayId { try? sStore.nextDay() }
-            router.goTo(.pastWorkout($wStore.workouts.first!))
+            Router.shared.showWorkout = false
+            try store.endWorkout()
+            
+            if store.currentDay?.id == workout.dayId { try? store.nextDay() }
+            
+            guard let completedWorkout = store.completedWorkouts.first else { return }
+            Router.shared.tab = .history
+            Router.shared.push(CompletedWorkoutRoute(workout: completedWorkout))
+            
+            if store.completedWorkouts.count >= 3 && !hasRated() {
+                Router.shared.showRatingScreen = true
+            }
         } catch {
-            router.notify(.danger, "Error saving workout")
+            Router.shared.toast("Error saving workout", type: .error)
         }
     }
 }

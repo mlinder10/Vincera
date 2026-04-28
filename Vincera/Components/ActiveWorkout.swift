@@ -8,35 +8,37 @@
 import SwiftUI
 
 struct ActiveWorkoutCollapsed: View {
-    @EnvironmentObject private var router: Router
-    let workout: Workout
+    let workout: Builder.ActiveWorkout
     
     var body: some View {
         VStack {
             HStack {
                 Text(workout.name)
                 Spacer()
-                TimerView(start: workout.start)
+                TimerView(start: workout.startedAt)
             }
             ProgressView(value: workout.progress())
         }
-        .onTapGesture { router.isShowingActiveWorkout = true }
+        .onTapGesture { Router.shared.showWorkout = true }
     }
 }
 
 struct ActiveWorkoutDisplayer: ViewModifier {
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var wStore: WorkoutStore
+    @ObservedObject private var router = Router.shared
+    @EnvironmentObject private var store: DataStore
     
     func body(content: Content) -> some View {
-        content
-            .toolbar {
-                if let workout = wStore.active, !router.isShowingActiveWorkout {
-                    ToolbarItem(placement: .bottomBar) {
-                        ActiveWorkoutCollapsed(workout: workout)
-                    }
+        if let workout = store.activeWorkout, !router.showWorkout {
+            content
+                .tabViewBottomAccessory {
+                    ActiveWorkoutCollapsed(workout: workout)
+                        .contentShape(Capsule())
+                        .padding(.horizontal)
+                        .onTapGesture { router.showWorkout = true }
                 }
-            }
+        } else {
+            content
+        }
     }
 }
 

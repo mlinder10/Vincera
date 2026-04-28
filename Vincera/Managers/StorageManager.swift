@@ -8,15 +8,22 @@
 import Foundation
 
 enum File: String {
-    case splits = "splits.json"
-    case days = "days.json"
-    case workouts = "workouts.json"
+    case splitsV1 = "splits.json"
+    case daysV1 = "days.json"
+    case workoutsV1 = "workouts.json"
+    
+    // current
+    case splitsV2 = "splits-v2.json"
+    case workoutsV2 = "days-v2.json"
+    case completedWorkoutsV2 = "workouts-v2.json"
+    case activeWorkout = "active-workout.json"
+    
     case splitMeta = "split-meta.json"
+    case trackers = "trackers.json"
+    
     case exercisesBase = "exercises.json"
     case exercisesRemote = "exercises-remote.json"
-    case workoutMeta = "workout-meta.json"
     case exercisesMut = "exercises-mutable.json"
-    case products = "products.json"
 }
 
 enum StorageError: LocalizedError {
@@ -49,18 +56,14 @@ final class StorageManager: Sendable {
     
     func read<T: Decodable>(_ path: File) throws -> T {
         guard let file = getFile(path) else { throw StorageError.invalidUrl }
-        guard let  data = try? Data(contentsOf: file) else { throw StorageError.failedToRead }
-        guard let decoded = try? JSONDecoder().decode(T.self, from: data) else { throw StorageError.failedToDecode }
+        let  data = try Data(contentsOf: file)
+        let decoded = try JSONDecoder().decode(T.self, from: data)
         return decoded
     }
     
     func write<T: Encodable>(_ path: File, _ data: T) throws {
         guard let file = getFile(path) else { throw StorageError.invalidUrl }
-        guard let encoded = try? JSONEncoder().encode(data) else { throw StorageError.failedToEncode }
-        do {
-            try encoded.write(to: file)
-        } catch {
-            throw StorageError.failedToWrite
-        }
+        let encoded = try JSONEncoder().encode(data)
+        try encoded.write(to: file)
     }
 }

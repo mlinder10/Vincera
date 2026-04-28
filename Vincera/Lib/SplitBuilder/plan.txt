@@ -1,0 +1,28 @@
+- sex: Male | Female
+women have hight MRV--need more sets but less weight (higher rep sets)
+women typically want to train lower body more
+Split Builder High Level Plan
+
+- days: 1 - 7
+1 - 2: full-body
+3: full-body rest rest upper rest lower rest
+4: upper lower rest upper lower rest rest
+5: upper lower rest push pull legs rest
+6: push pull legs push pull legs rest
+7: push pull legs push pull legs (<focused-groups> | full-body) (warn that rest days are beneficial for recovery)
+
+- goal: Size | Strength | Weight Loss
+size: 8-12 rep range for most exercises, more isolation exercises
+strength: 4-6 rep range, mostly compounds
+weight loss: 8-12 reps, focus on abs and cardio
+
+- equipment access: Dumbbells | Barbells | Cable Machine | Machines
+
+- focused groups: muscle groups (choose up to 3)
+1. more volume for groups and some splits may have days dedicated to them
+2. each focused group should have ~20 sets per week
+
+Extra Assumptions:
+- Splits have no supersets
+- Splits have no special set types
+(No intensity techniques)

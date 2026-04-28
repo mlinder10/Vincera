@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+let CUSTOM_EXERCISE_PREFIX = "custom-"
+
 struct ListExercise: Codable, Identifiable, Hashable, Sendable {
     let id: String
     let name: String
@@ -15,14 +17,19 @@ struct ListExercise: Codable, Identifiable, Hashable, Sendable {
     let directions: [String]
     let cues: [String]
     let image: String
-    let videoId: String
+    let videoUrl: String
     let bodyPart: String
     let primaryGroup: String
     let secondaryGroups: [String]
     let exerciseType: String
     let equipmentType: String
+    let unitsOne: ExerciseUnit
+    let unitsTwo: ExerciseUnit
     let repsLow: Int
     let repsHigh: Int
+    let stimulus: Int
+    let fatigue: Int
+    var isCustom: Bool { id.hasPrefix(CUSTOM_EXERCISE_PREFIX) }
     
     init(
         id: String,
@@ -31,14 +38,18 @@ struct ListExercise: Codable, Identifiable, Hashable, Sendable {
         directions: [String],
         cues: [String],
         image: String,
-        videoId: String,
+        videoUrl: String,
         bodyPart: String,
         primaryGroup: String,
         secondaryGroups: [String],
         exerciseType: String,
         equipmentType: String,
+        unitsOne: ExerciseUnit,
+        unitsTwo: ExerciseUnit,
         repsLow: Int,
-        repsHigh: Int
+        repsHigh: Int,
+        stimulus: Int,
+        fatigue: Int
     ) {
         self.id = id
         self.name = name
@@ -46,14 +57,18 @@ struct ListExercise: Codable, Identifiable, Hashable, Sendable {
         self.directions = directions
         self.cues = cues
         self.image = image
-        self.videoId = videoId
+        self.videoUrl = videoUrl
         self.bodyPart = bodyPart
         self.primaryGroup = primaryGroup
         self.secondaryGroups = secondaryGroups
         self.exerciseType = exerciseType
         self.equipmentType = equipmentType
+        self.unitsOne = unitsOne
+        self.unitsTwo = unitsTwo
         self.repsLow = repsLow
         self.repsHigh = repsHigh
+        self.stimulus = stimulus
+        self.fatigue = fatigue
     }
     
     static let UNKNOWN = ListExercise(
@@ -63,14 +78,18 @@ struct ListExercise: Codable, Identifiable, Hashable, Sendable {
         directions: [],
         cues: [],
         image: "",
-        videoId: "",
+        videoUrl: "",
         bodyPart: "",
         primaryGroup: "",
         secondaryGroups: [],
         exerciseType: "",
         equipmentType: "",
+        unitsOne: .weight,
+        unitsTwo: .reps,
         repsLow: 0,
-        repsHigh: 0
+        repsHigh: 0,
+        stimulus: 1,
+        fatigue: 1
     )
 }
 
@@ -81,17 +100,22 @@ struct RemoteListExercise: Codable, Sendable {
     let directions: [String]?
     let cues: [String]?
     let image: String?
-    let videoId: String?
+    let videoUrl: String?
     let bodyPart: String?
     let primaryGroup: String?
     let secondaryGroups: [String]?
     let exerciseType: String?
     let equipmentType: String?
+    let unitsOne: ExerciseUnit?
+    let unitsTwo: ExerciseUnit?
     let repsLow: Int?
     let repsHigh: Int?
+    let stimulus: Int?
+    let fatigue: Int?
     
     func toListExercise() -> ListExercise? {
-        guard let id, let name, let primaryGroup, let exerciseType, let equipmentType, let bodyPart else {
+        guard let id, let name, let primaryGroup, let exerciseType, let equipmentType,
+              let bodyPart, let unitsOne, let unitsTwo else {
             return nil
         }
         return ListExercise(
@@ -101,30 +125,40 @@ struct RemoteListExercise: Codable, Sendable {
             directions: directions ?? [],
             cues: cues ?? [],
             image: image ?? "",
-            videoId: videoId ?? "",
+            videoUrl: videoUrl ?? "",
             bodyPart: bodyPart,
             primaryGroup: primaryGroup,
             secondaryGroups: secondaryGroups ?? [],
             exerciseType: exerciseType,
             equipmentType: equipmentType,
+            unitsOne: unitsOne,
+            unitsTwo: unitsTwo,
             repsLow: repsLow ?? 0,
-            repsHigh: repsHigh ?? 0
+            repsHigh: repsHigh ?? 0,
+            stimulus: stimulus ?? 1,
+            fatigue: fatigue ?? 1
         )
     }
 }
 
-extension Sequence<ListExercise> {
+extension Dictionary<String, ListExercise> {
     func groupByPrimaryGroup() -> [String: [ListExercise]] {
         var dict = [String: [ListExercise]]()
-        let groups = Set(self.map { $0.primaryGroup })
-        for group in groups {
-            dict.updateValue(self.filter { $0.primaryGroup == group}, forKey: group)
+        for (_, value) in self {
+            if dict[value.primaryGroup] != nil {
+                dict[value.primaryGroup]?.append(value)
+            } else {
+                dict[value.primaryGroup] = [value]
+            }
+        }
+        for (key, _) in dict {
+            dict[key] = dict[key]?.sorted(by: { $0.name < $1.name })
         }
         return dict
     }
 }
 
-enum BodyPart: String, Identifiable, CaseIterable, Codable {
+enum BodyPart: String, StringRepresentable, Identifiable, CaseIterable, Codable {
     var id: String { self.rawValue }
     
     case chest = "chest"
@@ -134,6 +168,8 @@ enum BodyPart: String, Identifiable, CaseIterable, Codable {
     case legs = "legs"
     case calves = "calves"
     case abs = "abs"
+    
+    var string: String { self.rawValue.capitalized }
     
     var color: Color {
         switch self {
@@ -160,7 +196,7 @@ enum BodyPart: String, Identifiable, CaseIterable, Codable {
     }
 }
 
-enum MuscleGroup: String, Identifiable, CaseIterable, Codable {
+enum MuscleGroup: String, StringRepresentable, Identifiable, CaseIterable, Codable {
     var id: String { self.rawValue }
     
     case pecs = "pectorals"
@@ -182,9 +218,11 @@ enum MuscleGroup: String, Identifiable, CaseIterable, Codable {
     case abductors = "abductors"
     case gastrocnemius = "gastrocnemius"
     case soleus = "soleus"
+    
+    var string: String { self.rawValue.capitalized }
 }
 
-enum EquipmentType: String, Identifiable, CaseIterable, Codable {
+enum EquipmentType: String, StringRepresentable, Identifiable, CaseIterable, Codable {
     var id: String { self.rawValue }
     
     case barbell = "barbell"
@@ -192,12 +230,57 @@ enum EquipmentType: String, Identifiable, CaseIterable, Codable {
     case machine = "machine"
     case bodyWeight = "bodyweight"
     case cable = "cable"
+    case kettlebell = "kettlebell"
+    
+    var string: String { self.rawValue.split(separator: "-").map({ $0.capitalized }).joined(separator: " ") }
 }
 
-enum ExerciseType: String, Identifiable, CaseIterable, Codable {
+enum ExerciseType: String, StringRepresentable, Identifiable, CaseIterable, Codable {
     var id: String { self.rawValue }
     
     case compound = "compound"
     case isolation = "isolation"
+    case isometric = "isometric"
     case cardio = "cardio"
+    
+    var string: String { self.rawValue.capitalized }
+}
+
+enum ExerciseUnit: String, CaseIterable, Identifiable, Codable {
+    var id: String { self.rawValue }
+    var compressed: String {
+        switch self {
+        case .reps: "r"
+        case .weight: "w"
+        case .weightPlus: "p"
+        case .time: "t"
+        case .distance: "d"
+        }
+    }
+    var icon: String {
+        switch self {
+        case .reps: "number"
+        case .weight: "scalemass.fill"
+        case .weightPlus: "scalemass.fill"
+        case .time: "clock.fill"
+        case .distance: "ruler.fill"
+        }
+    }
+    
+    static func fromCompressed(_ compressed: String) -> ExerciseUnit? {
+        switch compressed {
+        case "r": return .reps
+        case "w": return .weight
+        case "p": return .weightPlus
+        case "t": return .time
+        case "d": return .distance
+        default: return nil
+        }
+    }
+    
+    case reps = "Reps"
+    case weight = "Weight"
+    case weightPlus = "Weight(+)"
+    case time = "Time"
+    case distance = "Distance"
 }

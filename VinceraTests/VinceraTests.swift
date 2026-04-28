@@ -1,8 +1,8 @@
 //
 //  VinceraTests.swift
-//  Vincera
+//  VinceraTests
 //
-//  Created by Matt Linder on 2/24/25.
+//  Created by Matt Linder on 3/26/26.
 //
 
 import Testing
@@ -10,8 +10,26 @@ import Testing
 
 struct VinceraTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func testSplitStringFormatting() async throws {
+        let store = DataStore().mock()
+        let result = VINCERA_SPLITS.first?.formattedFull(store)
+        print(String(result ?? "nil"))
+        #expect(result != nil)
     }
 
+    @Test func testDecisionTree() {
+        let store = DataStore().mock()
+        let info = SplitInfo(
+            sex: .female,
+            days: .three,
+            goal: .weightLoss,
+            focus: [.glutes, .quads, .hams],
+            equipment: EquipmentType.allCases
+        )
+        
+        let split = SplitBuilder.build(info)
+        let result = split.formattedFull(store)
+        print(result)
+        #expect(!result.isEmpty)
+    }
 }

@@ -8,24 +8,26 @@
 import SwiftUI
 
 struct NumberField: View {
+    @State private var selection: TextSelection?
+    @FocusState private var isFocused: Bool
+    @State private var text: String = ""
+    @Binding var num: Double?
     let title: String
     let validate: Bool
-    @Binding var num: Double?
-    @State private var text: String = ""
     var isValid: Bool { text.isValidNumeric() && (!validate || !text.isEmpty) }
     
     init(_ title: String, num: Binding<Double?>, validate: Bool) {
-        self.title = title
         self._num = num
+        self.title = title
         self.validate = validate
     }
     
     var body: some View {
-        TextField(title, text: $text)
+        TextField(title, text: $text, selection: $selection)
             .keyboardType(.decimalPad)
             .multilineTextAlignment(.center)
+            .frame(width: 80, height: 32)
             .contentShape(Rectangle())
-            .frame(width: 60)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(.regularMaterial)
@@ -34,6 +36,12 @@ struct NumberField: View {
             .onAppear { text = format(num) }
             .onChange(of: text) { checkValidAndUpdate($1) }
             .onChange(of: num) { text = format($1) }
+            .focused($isFocused)
+            .onChange(of: isFocused) { oldValue, newValue in
+                if isFocused {
+                    selection = .init(range: text.startIndex..<text.endIndex)
+                }
+            }
     }
     
     func format(_ double: Double?) -> String {
@@ -45,4 +53,3 @@ struct NumberField: View {
         if isValid, let value = Double(new) { num = value }
     }
 }
-

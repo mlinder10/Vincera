@@ -40,14 +40,10 @@ struct CustomSearchbar: View {
                 Button("Cancel") {
                     isEditing = false
                     searchText = ""
-                    hideKeyboard()
+                    Keyboard.dismiss()
                 }
                 .padding(.trailing, 8)
             }
         }
-    }
-    
-    private func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

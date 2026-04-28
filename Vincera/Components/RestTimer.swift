@@ -10,21 +10,24 @@ import SwiftUI
 fileprivate let CIRCLE_SIZE: CGFloat = 164
 
 struct RestTimerView: View {
-    @EnvironmentObject private var wStore: WorkoutStore
+    @EnvironmentObject private var store: DataStore
     @State private var showCustom = false
     @State private var selectedDuration: Int = 60
     
     var body: some View {
-        VStack {
-            Spacer()
+        Card {
             VStack {
                 toolbar
-                if wStore.timer.show {
+                if store.workoutTimer.show {
                     CountDownCircle()
+                        .transition(.asymmetric(
+                            insertion: .opacity.animation(.spring(.bouncy).delay(0.3)),
+                            removal: .opacity.animation(.none)
+                        ))
                         .padding(.top)
                         .overlay {
                             VStack {
-                                Text(wStore.timer.duration.secondFormatted)
+                                Text(store.workoutTimer.duration.secondFormatted)
                                     .font(.title2)
                                     .fontWeight(.semibold)
                                 TimerPicker(selectedDuration: $selectedDuration)
@@ -32,57 +35,55 @@ struct RestTimerView: View {
                         }
                 }
             }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .backgroundRect(radius: 12, fill: Material.ultraThin)
-            .onChange(of: wStore.timer.initialDuration) { wStore.timer.handleChange($0, $1) }
-            .onChange(of: selectedDuration) { wStore.timer.initialDuration = $1 }
         }
+        .onChange(of: store.workoutTimer.initialDuration) { store.workoutTimer.handleChange($0, $1) }
+        .onChange(of: selectedDuration) { store.workoutTimer.initialDuration = $1 }
     }
     
     private var toolbar: some View {
         HStack {
-            Button { wStore.timer.show.toggle() } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(wStore.timer.show ? 90 : 0))
-                    Text(wStore.timer.duration.secondFormatted)
-                        .fontWeight(.semibold)
-                }
+            HStack(spacing: 12) {
+                Image(systemName: "chevron.right")
+                    .rotationEffect(.degrees(store.workoutTimer.show ? 90 : 0))
+                Text(store.workoutTimer.duration.secondFormatted)
+                    .fontWeight(.semibold)
             }
-            .foregroundStyle(.primary)
-            .buttonStyle(NoTapAnimationStyle())
+            
+            
             Spacer()
-            if wStore.timer.duration > 0 {
+            
+            if store.workoutTimer.duration > 0 {
                 HStack {
-                    Button { wStore.timer.togglePause() } label: {
-                        Image(systemName: wStore.timer.isPaused ? "play.fill" : "pause")
+                    Button("", systemImage: store.workoutTimer.isPaused ? "play.fill" : "pause") {
+                        store.workoutTimer.togglePause()
                     }
                     .buttonBorderShape(.circle)
                     .buttonStyle(.borderedProminent)
-                    if wStore.timer.show {
-                        Text(wStore.timer.isPaused ? "Start" : "Pause")
+                    if store.workoutTimer.show {
+                        Text(store.workoutTimer.isPaused ? "Start" : "Pause")
                             .font(.subheadline)
                     }
                 }
             }
             HStack {
-                Button { wStore.timer.reset() } label: {
-                    Image(systemName: "arrow.2.circlepath")
+                Button("", systemImage: "arrow.2.circlepath") {
+                    store.workoutTimer.reset()
                 }
                 .buttonBorderShape(.circle)
                 .buttonStyle(.bordered)
-                if wStore.timer.show {
+                if store.workoutTimer.show {
                     Text("Reset")
                         .font(.subheadline)
                 }
             }
         }
+        .contentShape(Rectangle())
+        .onTapGesture { withAnimation { store.workoutTimer.show.toggle() } }
     }
 }
 
 fileprivate struct CountDownCircle: View {
-    @EnvironmentObject private var wStore: WorkoutStore
+    @EnvironmentObject private var store: DataStore
     @State private var percentage: Double = 1
     
     var body: some View {
@@ -91,7 +92,7 @@ fileprivate struct CountDownCircle: View {
             .rotation(.degrees(270))
             .stroke(.accent, lineWidth: 2)
             .frame(width: CIRCLE_SIZE, height: CIRCLE_SIZE)
-            .onChange(of: wStore.timer.getPercentage()) { _, newValue in
+            .onChange(of: store.workoutTimer.getPercentage()) { _, newValue in
                 withAnimation { percentage = newValue }
             }
     }

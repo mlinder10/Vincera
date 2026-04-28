@@ -8,6 +8,10 @@
 import Foundation
 import SwiftUI
 
+protocol StringRepresentable {
+    var string: String { get }
+}
+
 extension Array where Element: Equatable {
     mutating func toggle(_ element: Element) {
         if self.contains(where: { $0 == element }) {

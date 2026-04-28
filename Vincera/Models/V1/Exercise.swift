@@ -1,0 +1,190 @@
+//
+//  Exercise.swift
+//  LiftLogs
+//
+//  Created by Matt Linder on 10/21/24.
+//
+
+import SwiftUI
+
+private let ADD_SET_COUNT = 3
+
+struct Exercise: Codable, Identifiable, Hashable {
+    var id: String
+    var listId: String
+    var rpe: Int
+    var unitOne: ExerciseUnit
+    var unitTwo: ExerciseUnit
+    var sets: [VinceraSet]
+
+    init(
+        id: String,
+        listId: String,
+        rpe: Int,
+        unitOne: ExerciseUnit,
+        unitTwo: ExerciseUnit,
+        sets: [VinceraSet]
+    ) {
+        self.id = id
+        self.listId = listId
+        self.rpe = rpe
+        self.unitOne = unitOne
+        self.unitTwo = unitTwo
+        self.sets = sets
+    }
+
+    init(_ listExercise: ListExercise) {
+        self.id = UUID().uuidString
+        self.listId = listExercise.id
+        self.rpe = 5
+        self.unitOne = listExercise.equipmentType == "bodyweight" ? ExerciseUnit.weightPlus : ExerciseUnit.weight
+        self.unitTwo = ExerciseUnit.reps
+        self.sets = [VinceraSet(), VinceraSet(), VinceraSet()]
+    }
+
+    init(_ exercise: Exercise) {
+        self.id = UUID().uuidString
+        self.listId = exercise.listId
+        self.rpe = 5
+        self.unitOne = exercise.unitOne
+        self.unitTwo = exercise.unitTwo
+        self.sets = exercise.sets.map { _ in VinceraSet() }
+    }
+
+    init(
+        listId: String,
+        unitOne: ExerciseUnit = .weight,
+        unitTwo: ExerciseUnit = .reps,
+        sets: [Double]
+    ) {
+        self.id = UUID().uuidString
+        self.listId = listId
+        self.rpe = 5
+        self.unitOne = unitOne
+        self.unitTwo = unitTwo
+        self.sets = sets.map { VinceraSet(reps: $0) }
+    }
+
+    func clone() -> Exercise {
+        return Exercise(
+            id: UUID().uuidString,
+            listId: listId,
+            rpe: rpe,
+            unitOne: unitOne,
+            unitTwo: unitTwo,
+            sets: sets.map { $0.clone() }
+        )
+    }
+
+    mutating func addSet() {
+        sets.append(VinceraSet())
+    }
+
+    mutating func removeSet() {
+        guard self.sets.count > 1 else { return }
+        sets.removeLast()
+    }
+
+    func maxValue(for unit: ExerciseUnit) -> (Double, Double)? {
+        if unitOne == unit { return sets.maxValue(.one) }
+        if unitTwo == unit { return sets.maxValue(.two) }
+        return nil
+    }
+
+    func canFillDown(_ index: Int) -> Bool {
+        return (
+            index + 1 < sets.count &&
+            sets[index].valueOne != nil &&
+            sets[index].valueTwo != nil &&
+            sets[index+1].valueOne == nil &&
+            sets[index+1].valueTwo == nil
+        )
+    }
+
+    mutating func fillDown(_ index: Int) {
+        guard canFillDown(index) else { return }
+        sets[index+1].valueOne = sets[index].valueOne
+        sets[index+1].valueTwo = sets[index].valueTwo
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+//    func toString(_ eStore: ExerciseStore) -> String {
+//        let listEx = eStore.getExercise(self.listId)
+//        let reps = self.sets.first?.valueTwo ?? 0
+//        return (
+//            """
+//            Name - \(listEx?.name ?? "")
+//            Sets - \(self.sets.count)
+//            Reps - \(reps == 0 ? "Unspecified" : String(reps))
+//            """
+//        )
+//    }
+}
+
+extension Array<Array<Exercise>> {
+    func flattened() -> [Exercise] {
+        return self.flatMap { $0 }
+    }
+    
+    func clone() -> [[Exercise]] {
+        return self.map { $0.map { Exercise($0) } }
+    }
+    
+    mutating func addExercises(_ listExercises: [ListExercise]) {
+        self.append(contentsOf: listExercises.map { [Exercise($0)] })
+    }
+    
+    func getBodyParts() -> String {
+        return Set(self.flatMap { wrapper in
+            wrapper.compactMap { exercise in
+                ExerciseList.shared.getExercise(exercise.listId)?.bodyPart.capitalized
+            }
+        })
+        .sorted()
+        .joined(separator: ", ")
+    }
+    
+    func getListIds() -> [String] {
+        return self.flatMap({ $0.map({ $0.listId }) })
+    }
+    
+    mutating func move(from source: IndexSet, to destination: Int) {
+        self.move(fromOffsets: source, toOffset: destination)
+    }
+    
+    mutating func remove(_ wrapper: [Exercise]) {
+        guard let index = self.firstIndex(of: wrapper) else { return }
+        self.remove(at: index)
+    }
+    
+    func getVolume() -> Int {
+        return self.reduce(0) { $0 + $1.reduce(0) { $0 + $1.sets.count } }
+    }
+    
+    func getAverageRpe() -> Double {
+        return self.reduce(0) { $0 + Double($1.getRpe() ?? 0) } / Double(self.count)
+    }
+}
+
+extension Array<Exercise> {
+    mutating func superset(_ listExercises: [ListExercise]) {
+        self.append(contentsOf: listExercises.map { Exercise($0) })
+    }
+    
+    mutating func replace(_ listExercises: [ListExercise]) {
+        self = listExercises.map { Exercise($0) }
+    }
+    
+    func getRpe() -> Int? {
+        return self.first?.rpe
+    }
+    
+    mutating func setRpe(_ rpe: Int) {
+        for i in 0..<count {
+            self[i].rpe = rpe
+        }
+    }
+}
