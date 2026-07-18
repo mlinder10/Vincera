@@ -1,13 +1,13 @@
 //
-//  WorkoutScreen.swift
-//  Weights
+//  WorkoutScreen_.swift
+//  Vincera
 //
-//  Created by Matt Linder on 8/7/24.
+//  Created by Matt Linder on 5/22/26.
 //
 
 import SwiftUI
 
-struct WorkoutScreen: View {
+struct WorkoutScreen_: View {
     @EnvironmentObject private var store: DataStore
     
     var body: some View {
@@ -23,8 +23,34 @@ struct WorkoutScreen: View {
                     }
                 }
                 
-                WorkoutsView() {
-                    handleStartWorkout($0)
+                VStack {
+                    HStack {
+                        SectionTitle("Current Split") {
+                            Button("View All", systemImage: "line.horizontal.3.decrease") {
+                                Router.shared.push(SplitListRoute())
+                            }
+                        }
+                    }
+                    if let split = store.currentSplit {
+                        CurrentSplitView(split: split)
+                    } else {
+                        EmptyCard(
+                            title: "No Split Selected",
+                            description: "Choose a split from our library or create your own to get started"
+                        )
+                    }
+                }
+                .padding(.horizontal, PADDING_INLINE)
+                
+                VStack {
+//                    BrandButton("View Splits", systemImage: "list.bullet") {
+//                        Router.shared.push(SplitListRoute())
+//                    }
+//                    .secondary
+                    BrandButton("Generate Plan", systemImage: "sparkles") {
+                        Router.shared.push(AssistedSplitRoute())
+                    }
+                    .primary
                 }
                 .padding(.horizontal, PADDING_INLINE)
             }
@@ -37,7 +63,7 @@ struct WorkoutScreen: View {
             InfiniteCarousel(
                 data: split.days,
                 selectedTab: Binding(
-                    get: { (store.splitMeta.dayIndex ?? 0) + 1 },
+                    get: { (store.splitMeta.item.dayIndex ?? 0) + 1 },
                     set: handleUpdateDayIndex
                 ),
                 height: 240,
@@ -59,12 +85,10 @@ struct WorkoutScreen: View {
                 description: "Choose a split from our library or create your own to get started"
             )
             BrandButton("View Splits", systemImage: "list.bullet") {
-                Router.shared.tab = .plan
                 Router.shared.push(SplitListRoute())
             }
             .secondary
             BrandButton("Generate Split", systemImage: "sparkles") {
-                Router.shared.tab = .plan
                 Router.shared.push(AssistedSplitRoute())
             }
             .primary
@@ -74,8 +98,8 @@ struct WorkoutScreen: View {
     
     private func handleUpdateDayIndex(_ index: Int) {
         guard let split = store.currentSplit else { return }
-        if index == 0 { store.splitMeta.dayIndex = split.days.count - 1 }
-        else { store.splitMeta.dayIndex = index - 1 }
+        if index == 0 { store.splitMeta.item.dayIndex = split.days.count - 1 }
+        else { store.splitMeta.item.dayIndex = index - 1 }
     }
     
     func handleStartDay(_ day: Writers.Day? = nil) {
@@ -86,56 +110,4 @@ struct WorkoutScreen: View {
             Haptics.notify(.warning)
         }
     }
-    
-    func handleStartWorkout(_ workout: Writers.Workout? = nil) {
-        do {
-            try store.startWorkout(workout: workout?.toActive() ?? Builder.ActiveWorkout.new())
-            Router.shared.showWorkout = true
-        } catch {
-            Haptics.notify(.warning)
-        }
-    }
-}
-
-fileprivate struct WorkoutsView: View {
-    @EnvironmentObject private var store: DataStore
-    let startWorkout: (Writers.Workout?) -> Void
-    
-    var body: some View {
-        VStack {
-            SectionTitle("Workouts") {
-                Button("Start", systemImage: "bolt.fill") {
-                    startWorkout(nil)
-                }
-            }
-            if store.workouts.isEmpty {
-                emptyWorkoutsView
-            } else {
-                workoutsListView
-            }
-        }
-    }
-    
-    private var workoutsListView: some View {
-        LazyVStack {
-            ForEach(store.workouts) { workout in
-                WorkoutRow(workout: workout)
-                    .containerShape(Rectangle())
-                    .onTapGesture { startWorkout(workout) }
-            }
-        }
-    }
-    
-    private var emptyWorkoutsView: some View {
-        EmptyCard(
-            title: "No Workouts Saved",
-            description: "Individual workouts that you create will be displayed here"
-        )
-    }
-}
-
-#Preview {
-    WorkoutScreen()
-        .mockNavigation
-        .mockEnvironment
 }

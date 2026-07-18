@@ -80,6 +80,7 @@ struct ActiveWorkoutView: View {
                         removeExercise: { workout.wrappers.removeAll(where: { $0.id == wrapper.id }) }
                     )
                 }
+                .contentShape(Rectangle())
                 .padding(.vertical, 24)
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Rectangle().fill(.clear))
@@ -127,11 +128,11 @@ struct ActiveWorkoutView: View {
             
             if store.currentDay?.id == workout.dayId { try? store.nextDay() }
             
-            guard let completedWorkout = store.completedWorkouts.first else { return }
+            guard let completedWorkout = store.completedWorkout.list.first else { return }
             Router.shared.tab = .history
             Router.shared.push(CompletedWorkoutRoute(workout: completedWorkout))
             
-            if store.completedWorkouts.count >= 3 && !hasRated() {
+            if store.completedWorkout.list.count >= 3 && !hasRated() {
                 Router.shared.showRatingScreen = true
             }
         } catch {
