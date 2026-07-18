@@ -24,6 +24,21 @@ extension Builder.Split {
 }
 
 extension Array<Builder.Wrapper> {
+    func getVolume() -> [Volume] {
+        var parts = BodyPart.allCases.map { Volume(bodyPart: $0, sets: 0) }
+        let exercises = flattened()
+        let listExercises = exercises.map { ExerciseList.shared.getExercise($0.listId) }
+        
+        for e in zip(exercises, listExercises) {
+            guard let listExercise = e.1 else { continue }
+            guard let part = BodyPart(rawValue: listExercise.bodyPart) else { continue }
+            guard let index = parts.firstIndex(where: { $0.bodyPart == part }) else { continue }
+            parts[index].sets += e.0.sets.count
+        }
+        
+        return parts.sorted { $0.sets > $1.sets }
+    }
+    
     func flattened() -> [Builder.Exercise] {
         flatMap({ $0.exercises })
     }
@@ -47,17 +62,15 @@ extension Array<Builder.Wrapper> {
 }
 
 extension Builder.Wrapper {
-    func superset(_ exercises: [ListExercise]) {
+    func addExercises(_ exercises: [ListExercise], after exercise: Builder.Exercise? = nil) {
         for e in exercises {
             self.exercises.append(Builder.Exercise.from(list: e))
         }
     }
     
-    func replace(_ exercises: [ListExercise]) {
-        self.exercises = []
-        for e in exercises {
-            self.exercises.append(Builder.Exercise.from(list: e))
-        }
+    func replace(_ oldExercise: Builder.Exercise, with newExercise: ListExercise) {
+        guard let index = exercises.firstIndex(where: { $0.id == oldExercise.id }) else { return }
+        exercises[index] = Builder.Exercise.from(list: newExercise)
     }
 }
 
@@ -122,7 +135,7 @@ extension Builder.Exercise {
 }
 
 extension Array<Builder.Set> {
-    func maxValue(_ value: LLSetValueSelector) -> (Double, Double)? {
+    func maxValue(_ value: SetValueSelector) -> (Double, Double)? {
         let first = self
             .compactMap({ value == .one ? $0.valueOne : $0.valueTwo })
             .max()

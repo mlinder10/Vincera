@@ -40,17 +40,17 @@ private struct Metadata {
 
 final class SplitBuilder {
     private var split: Builder.Split
-    private var info: SplitInfo
+    private var survey: SurveyData
     private var metadata: Metadata
     
-    private init(_ info: SplitInfo) {
+    private init(_ survey: SurveyData) {
         self.split = Builder.Split.new()
-        self.info = info
+        self.survey = survey
         self.metadata = Metadata()
     }
     
-    static func build(_ info: SplitInfo) -> Writers.Split {
-        return SplitBuilder(info)
+    static func build(_ survey: SurveyData) -> Writers.Split {
+        return SplitBuilder(survey)
             .buildName()
             .buildDescription()
             .buildDays()
@@ -64,28 +64,64 @@ final class SplitBuilder {
     // MARK: - Structural Functions
     
     private func buildName() -> Self {
-        split.name = info.days.baseName + " " + info.goal.goalName
+        switch survey.daysPerWeek {
+        case 1: split.name = "Full Body"
+        case 2: split.name = "Full Body"
+        case 3: split.name = "Full Body / Upper Lower"
+        case 4: split.name = "Upper / Lower"
+        case 5: split.name = "Upper Lower / Push Pull Legs"
+        case 6: split.name = "Push Pull Legs"
+        case 7: split.name = "Push Pull Legs"
+        default: break
+        }
+        
+        split.name += " for "
+        
+        switch survey.goal {
+        case .strength: split.name += "Strength"
+        case .muscleGain: split.name += "Muscle Gain"
+        case .fatLoss: split.name += "Fat Loss"
+        }
+        
         return self
     }
     
     private func buildDescription() -> Self {
-        split.description = info.days.descriptionBase +
-        info.focus.focusDescription +
-        info.equipment.equipmentDescription
+        switch survey.daysPerWeek {
+        case 1: split.description = "One"
+        case 2: split.description = "Two"
+        case 3: split.description = "Three"
+        case 4: split.description = "Four"
+        case 5: split.description = "Five"
+        case 6: split.description = "Six"
+        case 7: split.description = "Seven"
+        default: break
+        }
+        
+        split.description += " day split "
+        if !survey.targetMuscles.isEmpty {
+            split.description += "with a focus on "
+            split.description += survey.targetMuscles.map({ $0.rawValue }).joined(separator: ", ")
+        }
+        
+        split.description += " using "
+        split.description += survey.availableEquipment.map({ $0.rawValue }).joined(separator: ", ")
+        
         return self
     }
     
     private func buildDays() -> Self {
-        let hasFocus = !info.focus.isEmpty
+        let hasFocus = !survey.targetMuscles.isEmpty
         
-        split.days = switch info.days {
-        case .one: [.init("Full Body", ""), .rest(), .rest(), .rest(), .rest(), .rest(), .rest()]
-        case .two: [.init("Full Body A", ""), .rest(), .rest(), .init("Full Body B", ""), .rest(), .rest(), .rest()]
-        case .three: [.init("Full Body", ""), .rest(), .rest(), .init("Upper", ""), .rest(), .init("Lower", ""), .rest()]
-        case .four: [.init("Upper A", ""), .init("Lower A", ""), .rest(), .init("Upper B", ""), .rest(), .init("Lower B", ""), .rest()]
-        case .five: [.init("Upper", ""), .init("Lower", ""), .rest(), .init("Push", ""), .init("Pull", ""), .init("Legs", ""), .rest()]
-        case .six: [.init("Push", ""), .init("Pull", ""), .init("Legs", ""), .init("Push", ""), .init("Pull", ""), .init("Legs", ""), .rest()]
-        case .seven: [.init("Push", ""), .init("Pull", ""), .init("Legs", ""), .init("Push", ""), .init("Pull", ""), .init("Legs", ""), .init(hasFocus ? "Focused Muscle Groups" : "Full Body", "")]
+        split.days = switch survey.daysPerWeek {
+        case 1: [.init("Full Body", ""), .rest(), .rest(), .rest(), .rest(), .rest(), .rest()]
+        case 2: [.init("Full Body A", ""), .rest(), .rest(), .init("Full Body B", ""), .rest(), .rest(), .rest()]
+        case 3: [.init("Full Body", ""), .rest(), .rest(), .init("Upper", ""), .rest(), .init("Lower", ""), .rest()]
+        case 4: [.init("Upper A", ""), .init("Lower A", ""), .rest(), .init("Upper B", ""), .rest(), .init("Lower B", ""), .rest()]
+        case 5: [.init("Upper", ""), .init("Lower", ""), .rest(), .init("Push", ""), .init("Pull", ""), .init("Legs", ""), .rest()]
+        case 6: [.init("Push", ""), .init("Pull", ""), .init("Legs", ""), .init("Push", ""), .init("Pull", ""), .init("Legs", ""), .rest()]
+        case 7: [.init("Push", ""), .init("Pull", ""), .init("Legs", ""), .init("Push", ""), .init("Pull", ""), .init("Legs", ""), .init(hasFocus ? "Focused Muscle Groups" : "Full Body", "")]
+        default: []
         }
         return self
     }
@@ -96,13 +132,17 @@ final class SplitBuilder {
         for day in split.days {
             if day.isRest { continue }
             
-            let targetGroups = muscleGroupsFromName(day.name, focus: info.focus, sex: info.sex)
+            let targetGroups = muscleGroupsFromName(
+                day.name,
+                targetMuscles: survey.targetMuscles,
+                gender: survey.gender
+            )
             
             for group in targetGroups {
                 // 1. Filter Pool
                 let pool = ExerciseList.shared.exercises.values.filter { e in
                     e.primaryGroup == group.rawValue &&
-                    info.equipment.map({$0.rawValue}).contains(e.equipmentType)
+                    survey.availableEquipment.map({ $0.rawValue }).contains(e.equipmentType)
                 }
                 
                 // 2. Identify already selected exercises in the ENTIRE split for variety
@@ -112,7 +152,12 @@ final class SplitBuilder {
                 // 3. Anchor Rule: If this is the first exercise of a major group, prioritize compounds
                 let isAnchor = day.wrappers.isEmpty
                 let weightedPool = pool.map { e -> (ListExercise, Double) in
-                    var score = scoreExercise(e, globalSelected: globalSelectedIDs, currentDaySelected: currentDayIDs, goal: info.goal)
+                    var score = scoreExercise(
+                        e,
+                        globalSelected: globalSelectedIDs,
+                        currentDaySelected: currentDayIDs,
+                        goal: survey.goal
+                    )
                     if isAnchor && e.exerciseType == ExerciseType.compound.rawValue { score += 10.0 }
                     return (e, score)
                 }
@@ -155,24 +200,24 @@ final class SplitBuilder {
                 
                 // 1. Set Count Logic (MRV Adjustment)
                 // Focus groups get +1 set, Females get +1 set
-                if info.focus.map({$0.rawValue}).contains(listExercise.primaryGroup) {
+                if survey.targetMuscles.map({ $0.rawValue }).contains(listExercise.primaryGroup) {
                     targetExercise.addSet()
                 }
-                if info.sex == .female {
+                if survey.gender == .female {
                     targetExercise.addSet()
                 }
                 
                 // 2. Rep Count Logic
                 for j in 0..<targetExercise.sets.count {
-                    var reps = switch info.goal {
+                    var reps = switch survey.goal {
                     case .strength: listExercise.repsLow
-                    case .size: (listExercise.repsLow + listExercise.repsHigh) / 2
-                    case .weightLoss: listExercise.repsHigh
+                    case .muscleGain: (listExercise.repsLow + listExercise.repsHigh) / 2
+                    case .fatLoss: listExercise.repsHigh
                     }
                     
                     // Women handle higher relative volume/metabolic stress better
-                    if info.sex == .female {
-                        reps += (info.goal == .size ? 3 : 2)
+                    if survey.gender == .female {
+                        reps += (survey.goal == .muscleGain ? 3 : 2)
                     }
                     
                     targetExercise.sets[j].valueTwo = Double(reps)
@@ -184,7 +229,7 @@ final class SplitBuilder {
     
     private func buildCardio() -> Self {
         // Only apply if the goal is weight loss
-        guard info.goal == .weightLoss else { return self }
+        guard survey.goal == .fatLoss else { return self }
         
         for day in split.days {
             if day.isRest { continue }
@@ -224,7 +269,7 @@ final class SplitBuilder {
         return Double(e.fatigue) + secondaryTax
     }
     
-    private func scoreExercise(_ e: ListExercise, globalSelected: [String], currentDaySelected: [String], goal: SplitInfo.Goal) -> Double {
+    private func scoreExercise(_ e: ListExercise, globalSelected: [String], currentDaySelected: [String], goal: TrainingGoal) -> Double {
         let adjFatigue = calculateAdjustedFatigue(e)
         var score = Double(e.stimulus) / max(1.0, adjFatigue)
         
@@ -238,11 +283,11 @@ final class SplitBuilder {
         case .strength:
             if e.exerciseType == ExerciseType.compound.rawValue { score += 5.0 }
             if e.equipmentType == EquipmentType.barbell.rawValue { score += 3.0 }
-        case .size:
+        case .muscleGain:
             // Size prioritizes total stimulus and machine stability
             score += Double(e.stimulus) * 0.4
             if e.equipmentType == EquipmentType.machine.rawValue || e.equipmentType == EquipmentType.cable.rawValue { score += 1.5 }
-        case .weightLoss:
+        case .fatLoss:
             // Favor exercises with lower fatigue to allow for shorter rest periods
             if e.fatigue <= 3 { score += 2.0 }
         }
@@ -256,13 +301,13 @@ final class SplitBuilder {
 
 // MARK: - Helpers
 
-private func muscleGroupsFromName(_ name: String, focus: [MuscleGroup], sex: SplitInfo.Sex) -> [MuscleGroup] {
+private func muscleGroupsFromName(_ name: String, targetMuscles: [MuscleGroup], gender: Gender) -> [MuscleGroup] {
     // Physiological Bias: Female users get Glute priority in FB/Lower days
-    let fbGroups: [MuscleGroup] = (sex == .female)
+    let fbGroups: [MuscleGroup] = (gender == .female)
         ? [.glutes, .quads, .hams, .lats, .pecs, .sideDelts, .abs]
         : [.quads, .pecs, .hams, .lats, .tris, .bis, .sideDelts]
     
-    let lowerGroups: [MuscleGroup] = (sex == .female)
+    let lowerGroups: [MuscleGroup] = (gender == .female)
         ? [.glutes, .glutes, .hams, .quads, .adductors, .gastrocnemius]
         : [.quads, .quads, .hams, .glutes, .adductors, .gastrocnemius]
 
@@ -274,9 +319,9 @@ private func muscleGroupsFromName(_ name: String, focus: [MuscleGroup], sex: Spl
     if name.contains("Legs") { return lowerGroups }
     
     if name.contains("Focused Muscle Groups") {
-        if focus.count >= 3 { return focus.flatMap { [$0, $0] } }
-        if focus.count == 2 { return focus.flatMap { [$0, $0, $0] } }
-        if focus.count == 1 { return [focus[0], focus[0], focus[0], focus[0], focus[0]] }
+        if targetMuscles.count >= 3 { return targetMuscles.flatMap { [$0, $0] } }
+        if targetMuscles.count == 2 { return targetMuscles.flatMap { [$0, $0, $0] } }
+        if targetMuscles.count == 1 { return [targetMuscles[0], targetMuscles[0], targetMuscles[0], targetMuscles[0], targetMuscles[0]] }
     }
     
     return []

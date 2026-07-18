@@ -8,7 +8,6 @@
 import Foundation
 
 enum VinceraError: Error {
-    case oneSet
     case existingWorkout
     case invalidWorkout
     case notImplemented

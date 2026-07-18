@@ -49,6 +49,7 @@ struct RatingModal: View {
         }
     }
     
+    @ViewBuilder
     private var questionView: some View {
         VStack(spacing: 16) {
             Text("Enjoying Vincera?")
@@ -60,7 +61,7 @@ struct RatingModal: View {
                         didTapNo = true
                     }
                 }
-                .secondary // Assuming this provides a more muted look
+                .secondary
                 
                 BrandButton("Yes!") {
                     requestReview()
@@ -71,6 +72,7 @@ struct RatingModal: View {
         }
     }
     
+    @ViewBuilder
     private var apologyView: some View {
         VStack(spacing: 16) {
             VStack(spacing: 8) {

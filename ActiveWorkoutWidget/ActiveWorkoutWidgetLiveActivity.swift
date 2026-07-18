@@ -11,70 +11,106 @@ import SwiftUI
 
 struct ActiveWorkoutWidgetAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
+        var completedSets: Int
+        var totalSets: Int
     }
 
-    // Fixed non-changing properties about your activity go here!
     var name: String
+    var color: String
 }
 
 struct ActiveWorkoutWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: ActiveWorkoutWidgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
+            let name = context.attributes.name
+            let colorString = context.attributes.color
+            let color = Color.fromHex(colorString)
+            
             VStack {
-                Text("Hello \(context.state.emoji)")
-            }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
-
-        } dynamicIsland: { context in
-            DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
-                DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                HStack(alignment: .bottom) {
+                    DayIcon(name: name, color: colorString)
+                    VStack(alignment: .leading) {
+                        Text(name)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("\(context.state.completedSets) / \(context.state.totalSets) sets")
+                        .fontWeight(.semibold)
                 }
+                ProgressView(value: Double(context.state.completedSets) / Double(context.state.totalSets))
+            }
+            .padding()
+            .activityBackgroundTint(color)
+            .activitySystemActionForegroundColor(Color.black)
+            
+        } dynamicIsland: { context in
+            let name = context.attributes.name
+            let colorString = context.attributes.color
+            let color = Color.fromHex(colorString)
+            
+            return DynamicIsland {
+                DynamicIslandExpandedRegion(.leading) {
+                    DayIcon(name: name, color: colorString)
+                }
+                
                 DynamicIslandExpandedRegion(.trailing) {
                     Text("Trailing")
                 }
+                
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("\(context.state.completedSets) / \(context.state.totalSets) sets")
+                                .fontWeight(.semibold)
+                        }
+                        ProgressView(value: Double(context.state.completedSets) / Double(context.state.totalSets))
+                    }
                 }
             } compactLeading: {
-                Text("L")
+                DayIcon(
+                    name: name,
+                    color: colorString,
+                    size: 36
+                )
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text(name).foregroundStyle(color)
             } minimal: {
-                Text(context.state.emoji)
+                DayIcon(name: name, color: colorString)
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
+            .widgetURL(URL(string: "vincera://"))
+            .keylineTint(color)
         }
     }
 }
 
 extension ActiveWorkoutWidgetAttributes {
     fileprivate static var preview: ActiveWorkoutWidgetAttributes {
-        ActiveWorkoutWidgetAttributes(name: "World")
+        ActiveWorkoutWidgetAttributes(
+            name: "Push",
+            color: "#ff0000"
+        )
     }
 }
 
 extension ActiveWorkoutWidgetAttributes.ContentState {
-    fileprivate static var smiley: ActiveWorkoutWidgetAttributes.ContentState {
-        ActiveWorkoutWidgetAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: ActiveWorkoutWidgetAttributes.ContentState {
-         ActiveWorkoutWidgetAttributes.ContentState(emoji: "🤩")
+    fileprivate static var halfDone: ActiveWorkoutWidgetAttributes.ContentState {
+        ActiveWorkoutWidgetAttributes.ContentState(
+            completedSets: 5,
+            totalSets: 10
+        )
      }
 }
 
-#Preview("Notification", as: .content, using: ActiveWorkoutWidgetAttributes.preview) {
+#Preview(
+    "Notification",
+//    as: .dynamicIsland(.expanded),
+    as: .content,
+    using: ActiveWorkoutWidgetAttributes.preview
+) {
    ActiveWorkoutWidgetLiveActivity()
 } contentStates: {
-    ActiveWorkoutWidgetAttributes.ContentState.smiley
-    ActiveWorkoutWidgetAttributes.ContentState.starEyes
+    ActiveWorkoutWidgetAttributes.ContentState.halfDone
 }

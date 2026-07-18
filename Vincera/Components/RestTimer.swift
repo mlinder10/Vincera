@@ -40,6 +40,7 @@ struct RestTimerView: View {
         .onChange(of: selectedDuration) { store.workoutTimer.initialDuration = $1 }
     }
     
+    @ViewBuilder
     private var toolbar: some View {
         HStack {
             HStack(spacing: 12) {

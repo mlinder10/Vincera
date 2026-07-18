@@ -7,7 +7,7 @@
 
 import Foundation
 
-private let BASE_URL = "https://vinceratraining.com"
+let BASE_URL = "https://vinceratraining.com"
 private let EXERCISES_ENDPOINT = "/exercises/v1.json"
 
 final class ExerciseList: ObservableObject {
@@ -18,23 +18,25 @@ final class ExerciseList: ObservableObject {
     
     // init
     private init() {
+        self.reload()
+    }
+    
+    private func reload() {
         self.exercises = loadLocalExercises()
+        let custom: [String: ListExercise] = (try? StorageManager.read(.exercisesMut)) ?? [:]
+        exercises.merge(custom) { orig, _ in orig }
+        
         Task {
             if let exercises = try? await self.fetchRemoteExercises() {
-                await MainActor.run {
-                    self.exercises = exercises
-                }
-            }
-            let custom: [String: ListExercise] = (try? StorageManager.shared.read(.exercisesMut)) ?? [:]
-            await MainActor.run {
-                exercises.merge(custom) { orig, cust in return orig }
+                // will load next time users open the app
+                try? StorageManager.write(.exercisesRemote, exercises)
             }
         }
     }
     
     private func loadLocalExercises() -> [String: ListExercise] {
-        var exercises: [String: ListExercise] = (try? StorageManager.shared.read(.exercisesRemote)) ?? [:]
-        if exercises.isEmpty { exercises = (try? StorageManager.shared.read(.exercisesBase)) ?? [:] }
+        var exercises: [String: ListExercise] = (try? StorageManager.read(.exercisesRemote)) ?? [:]
+        if exercises.isEmpty { exercises = (try? StorageManager.read(.exercisesBase)) ?? [:] }
         return exercises
     }
     
@@ -57,7 +59,7 @@ final class ExerciseList: ObservableObject {
     func createExercise(_ exercise: ListExercise) throws {
         exercises[exercise.id] = exercise
         do {
-            try StorageManager.shared.write(.exercisesMut, getCustom())
+            try StorageManager.write(.exercisesMut, getCustom())
         } catch {
             exercises.removeValue(forKey: exercise.id)
             throw error
@@ -69,7 +71,7 @@ final class ExerciseList: ObservableObject {
         let original = exercises[exercise.id]
         exercises[exercise.id] = exercise
         do {
-            try StorageManager.shared.write(.exercisesMut, getCustom())
+            try StorageManager.write(.exercisesMut, getCustom())
         } catch {
             exercises[exercise.id] = original
             throw error
@@ -80,7 +82,7 @@ final class ExerciseList: ObservableObject {
         guard exercise.isCustom else { return }
         exercises.removeValue(forKey: exercise.id)
         do {
-            try StorageManager.shared.write(.exercisesMut, getCustom())
+            try StorageManager.write(.exercisesMut, getCustom())
         } catch {
             exercises[exercise.id] = exercise
             throw error
@@ -88,6 +90,20 @@ final class ExerciseList: ObservableObject {
     }
     
     // helpers
+    
+    func `import`(_ exercises: [String: ListExercise]) {
+        for (key, value) in exercises {
+            if self.exercises[key] == nil {
+                self.exercises[key] = value
+            }
+        }
+        try? StorageManager.write(.exercisesMut, getCustom())
+    }
+    
+    func clear() {
+        try? StorageManager.write(.exercisesMut, [ListExercise]())
+        self.reload()
+    }
     
     private func getCustom() -> [String: ListExercise] { exercises.filter({ $0.value.isCustom }) }
     
@@ -98,11 +114,12 @@ final class ExerciseList: ObservableObject {
             (filter.search.isEmpty || ex.value.name.lowercased().contains(filter.search.lowercased())) &&
             (filter.exerciseTypes.isEmpty || filter.exerciseTypes.contains(where: { $0.rawValue == ex.value.exerciseType })) &&
             (filter.equipmentTypes.isEmpty || filter.equipmentTypes.contains(where: { $0.rawValue == ex.value.equipmentType })) &&
-            (filter.bodyParts.isEmpty || filter.bodyParts.contains(where: { $0.rawValue == ex.value.bodyPart }))
+            (filter.bodyParts.isEmpty || filter.bodyParts.contains(where: { $0.rawValue == ex.value.bodyPart })) &&
+            (filter.hidden.isEmpty || !filter.hidden.contains(ex.key))
         }
     }
 
-    struct Filter {
+    struct Filter: Equatable {
         var search = ""
         var exerciseTypes = [ExerciseType]()
         var equipmentTypes = [EquipmentType]()

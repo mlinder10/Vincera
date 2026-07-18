@@ -10,45 +10,15 @@ import SwiftUI
 let MOCK_DATA_STORE = DataStore().mock()
 //let MOCK_DATA_STORE = DataStore()
 
-let MOCK_SPLITS: [Writers.Split] = []
+let MOCK_SURVEY_DATA = SurveyData(
+    gender: .male,
+    goal: .muscleGain,
+    targetMuscles: [.sideDelts, .bis, .tris],
+    availableEquipment: EquipmentType.allCases,
+    daysPerWeek: 6
+)
 
-let MOCK_WORKOUTS: [Writers.Workout] = [
-    .init(
-        id: UUID().uuidString,
-        name: "Test Workout - 1",
-        description: "Some random description for a mock workout",
-        color: Color.random().toHex(),
-        wrappers: []
-    ),
-    .init(
-        id: UUID().uuidString,
-        name: "Test Workout - 2",
-        description: "Some random description for a mock workout",
-        color: Color.random().toHex(),
-        wrappers: []
-    ),
-    .init(
-        id: UUID().uuidString,
-        name: "Test Workout - 3",
-        description: "Some random description for a mock workout",
-        color: Color.random().toHex(),
-        wrappers: []
-    ),
-    .init(
-        id: UUID().uuidString,
-        name: "Test Workout - 4",
-        description: "Some random description for a mock workout",
-        color: Color.random().toHex(),
-        wrappers: []
-    ),
-    .init(
-        id: UUID().uuidString,
-        name: "Test Workout - 5",
-        description: "Some random description for a mock workout",
-        color: Color.random().toHex(),
-        wrappers: []
-    )
-]
+let MOCK_SPLITS: [Writers.Split] = []
 
 let MOCK_COMPLETED_WORKOUTS: [Writers.CompletedWorkout] = [
     .init(
@@ -61,6 +31,11 @@ let MOCK_COMPLETED_WORKOUTS: [Writers.CompletedWorkout] = [
         endedAt: Date(),
         wrappers: []
     )
+]
+
+let MOCK_TRACKERS: [Writers.PRTracker] = [
+    .init(listId: "0", type: .weight),
+    .init(listId: "51", type: .reps)
 ]
 
 let MOCK_SPLIT_META = Writers.SplitMeta(splitId: VINCERA_SPLITS.first?.id, dayIndex: 0)

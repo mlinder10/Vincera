@@ -17,9 +17,9 @@ final class Router: ObservableObject {
     @Published var showRatingScreen = false
     
     @Published var tab: ProtectedTab = .workout
-    @Published var showWorkout: Bool = false
+    @Published var showWorkout = false
     @Published var routes = Routes()
-    @Published var toast: ToastData? = nil
+    @Published var toast: ToastData?
     
     var currentStack: ProtectedStack {
         if self.showWorkout { return .activeWorkout }
@@ -60,28 +60,27 @@ final class Router: ObservableObject {
 }
 
 enum ProtectedTab {
-    case workout, plan, history, exercise, media
+    case workout, history, library, settings
     
     var stack: ProtectedStack {
         return switch self {
         case .workout: .workout
-        case .plan: .plan
         case .history: .history
-        case .exercise: .exercise
-        case .media: fatalError("Attempted to convert ProtectedTab to ProtectedStack on media")
+        case .library: .library
+        case .settings: .settings
         }
     }
 }
 
 enum ProtectedStack {
-    case workout, plan, history, exercise, activeWorkout
+    case workout, history, library, settings, activeWorkout
     
     var tab: ProtectedTab {
         return switch self {
         case .workout: .workout
         case .history: .history
-        case .plan: .plan
-        case .exercise: .exercise
+        case .library: .library
+        case .settings: .settings
         case .activeWorkout: fatalError("Attempted to convert ProtectedStack to ProtectedTab on activeWorkout")
         }
     }
@@ -90,16 +89,16 @@ enum ProtectedStack {
 struct Routes {
     var workout = [AnyRoute]()
     var history = [AnyRoute]()
-    var plan = [AnyRoute]()
-    var exercise = [AnyRoute]()
+    var library = [AnyRoute]()
+    var settings = [AnyRoute]()
     var activeWorkout = [AnyRoute]()
     
     func select(stack: ProtectedStack) -> [AnyRoute] {
         return switch stack {
         case .workout: workout
         case .history: history
-        case .plan: plan
-        case .exercise: exercise
+        case .library: library
+        case .settings: settings
         case .activeWorkout: activeWorkout
         }
     }
@@ -108,8 +107,8 @@ struct Routes {
         switch stack {
         case .workout: workout = newValue
         case .history: history = newValue
-        case .plan: plan = newValue
-        case .exercise: exercise = newValue
+        case .library: library = newValue
+        case .settings: settings = newValue
         case .activeWorkout: activeWorkout = newValue
         }
     }

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Charts
 
 struct SplitCell: View {
     @EnvironmentObject private var store: DataStore
@@ -94,23 +93,23 @@ struct SplitCell: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { handleSelect() }
+        .contextMenu { menuOptions }
     }
     
+    @ViewBuilder
     private var menuOptions: some View {
         Group {
             if isListItem {
                 Button("Select", systemImage: "checklist", action: handleSelect)
             }
             
-            if !isSplitPremium(splitId: split.id) {
-                Button("Copy Text", systemImage: "document.on.document") {
-                    Clipboard.copy(split.formatted())
-                    Router.shared.toast("Text copied to clipboard", type: .info)
-                }
-                
-                Button("Edit", systemImage: "pencil") {
-                    Router.shared.push(SplitEditorRoute(split: split))
-                }
+            Button("Copy Text", systemImage: "document.on.document") {
+                Clipboard.copy(split.formatted())
+                Router.shared.toast("Text copied to clipboard", type: .info)
+            }
+            
+            Button("Edit", systemImage: "pencil") {
+                Router.shared.push(SplitEditorRoute(split: split))
             }
             
             if !isSplitImmutable(splitId: split.id) {
@@ -135,40 +134,9 @@ struct SplitCell: View {
     
     private func handleDelete() {
         do {
-            try store.deleteSplit(split)
+            try store.split.delete(split)
         } catch {
             Router.shared.toast("Error deleting \(split.name)", type: .error)
-        }
-    }
-}
-
-struct VolumePieChart: View {
-    let volume: [Volume]
-    var size: CGFloat = 160
-    
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                ForEach(volume.sortedByAvg()) { vol in
-                    HStack {
-                        Rectangle()
-                            .fill(vol.bodyPart.color)
-                            .frame(width: 8, height: 8)
-                        Text(vol.bodyPart.rawValue.capitalized)
-                            .font(.caption)
-                        Text("\(volume.average(vol.bodyPart))%")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-            Chart {
-                ForEach(volume) { vol in
-                    SectorMark(angle: .value(vol.bodyPart.rawValue, vol.sets))
-                        .foregroundStyle(vol.bodyPart.color)
-                }
-            }
-            .frame(height: size)
         }
     }
 }

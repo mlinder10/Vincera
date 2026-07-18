@@ -23,24 +23,46 @@ enum CardShape {
     }
 }
 
+let CARD_COLOR = Color.backgroundSecondary.opacity(0.8)
+private let DEFAULT_PADDING: CGFloat = 16
+
 struct Card<Content: View>: View {
     let shape: CardShape
-    let padding: CGFloat
+    let vPadding: CGFloat
+    let hPadding: CGFloat
     @ViewBuilder var content: () -> Content
     
-    init(_ shape: CardShape = .rrect, padding: CGFloat = 16, @ViewBuilder content: @escaping () -> Content) {
+    init(
+        _ shape: CardShape = .rrect,
+        padding: CGFloat = DEFAULT_PADDING,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
         self.shape = shape
-        self.padding = padding
+        self.vPadding = padding
+        self.hPadding = padding
+        self.content = content
+    }
+    
+    init(
+        _ shape: CardShape = .rrect,
+        vPadding: CGFloat = DEFAULT_PADDING,
+        hPadding: CGFloat = DEFAULT_PADDING,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.shape = shape
+        self.vPadding = vPadding
+        self.hPadding = hPadding
         self.content = content
     }
     
     var body: some View {
         content()
-            .padding(padding)
+            .padding(.vertical, vPadding)
+            .padding(.horizontal, hPadding)
             .background(
                 shape.view
                     .fill(.thinMaterial)
-                    .stroke(.backgroundSecondary.opacity(0.8), style: StrokeStyle(lineWidth: 1))
+                    .stroke(CARD_COLOR, style: StrokeStyle(lineWidth: 1))
             )
     }
 }

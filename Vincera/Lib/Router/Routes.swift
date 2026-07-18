@@ -11,20 +11,11 @@ extension View {
     var navigator: some View {
         self
             .navigationDestination(for: AnyRoute.self) { $0.base.view() }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        AccountScreen()
-                    } label: {
-                        Image(systemName: "person.circle")
-                    }
-                }
-            }
     }
 }
 
 struct ExercisePageRoute: Route {
-    var stacks: [ProtectedStack] = [.exercise, .activeWorkout, .workout, .plan, .history]
+    var stacks: [ProtectedStack] = [.library, .activeWorkout, .workout, .history]
     var name = "ExercisePage"
     let exercise: ListExercise
     
@@ -46,7 +37,7 @@ struct ExerciseListRoute: Route {
         hasher.combine(replacementId)
     }
     
-    var stacks: [ProtectedStack] = [.workout, .plan, .exercise, .activeWorkout, .history]
+    var stacks: [ProtectedStack] = [.workout, .library, .activeWorkout, .history]
     var name = "ExerciseList"
     let hidden: [String]
     let replacementId: String?
@@ -66,7 +57,7 @@ struct ExerciseListRoute: Route {
 }
 
 struct SplitEditorRoute: Route {
-    var stacks: [ProtectedStack] = [.plan]
+    var stacks: [ProtectedStack] = [.workout]
     var name = "SplitEditor"
     let split: Writers.Split?
     
@@ -76,7 +67,7 @@ struct SplitEditorRoute: Route {
 }
 
 struct SplitDayEditorRoute: Route {
-    var stacks: [ProtectedStack] = [.plan]
+    var stacks: [ProtectedStack] = [.workout]
     var name = "SplitEditor"
     let day: Builder.Day
     
@@ -85,31 +76,12 @@ struct SplitDayEditorRoute: Route {
     }
 }
 
-struct WorkoutEditorRoute: Route {
-    var stacks: [ProtectedStack] = [.plan]
-    var name = "DayEditor"
-    let workout: Writers.Workout?
-    
-    func view() -> AnyView {
-        AnyView(WorkoutEditor(workout))
-    }
-}
-
 struct SplitListRoute: Route {
-    var stacks: [ProtectedStack] = [.plan]
+    var stacks: [ProtectedStack] = [.workout]
     var name = "SplitList"
     
     func view() -> AnyView {
         AnyView(SplitListScreen())
-    }
-}
-
-struct CreatePRRoute: Route {
-    var stacks: [ProtectedStack] = [.history]
-    var name = "CreatePR"
-    
-    func view() -> AnyView {
-        AnyView(CreatePRTrackerScreen())
     }
 }
 
@@ -124,7 +96,7 @@ struct CompletedWorkoutRoute: Route {
 }
 
 struct CreateExerciseRoute: Route {
-    var stacks: [ProtectedStack] = [.plan, .workout, .activeWorkout, .history, .exercise]
+    var stacks: [ProtectedStack] = [.workout, .activeWorkout, .history, .library]
     var name = "CreateExercise"
     
     func view() -> AnyView {
@@ -133,10 +105,19 @@ struct CreateExerciseRoute: Route {
 }
 
 struct AssistedSplitRoute: Route {
-    var stacks: [ProtectedStack] = [.plan, .workout]
+    var stacks: [ProtectedStack] = [.workout]
     var name = "AssistedSplit"
     
     func view() -> AnyView {
         AnyView(AssistedSplitScreen())
+    }
+}
+
+struct ManageSubscriptionRoute: Route {
+    var stacks: [ProtectedStack] = [.settings]
+    var name = "ManageSubscription"
+    
+    func view() -> AnyView {
+        AnyView(ManageSubscriptionScreen())
     }
 }

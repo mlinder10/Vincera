@@ -32,6 +32,7 @@ struct SectionTitle<Content: View>: View {
             
             Spacer()
             action()
+                .font(.subheadline)
         }
         .padding(.horizontal)
     }

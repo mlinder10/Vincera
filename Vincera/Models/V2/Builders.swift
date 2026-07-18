@@ -146,62 +146,6 @@ enum Builder {
         }
     }
     
-    final class Workout: ObservableObject, Identifiable, Equatable, Hashable {
-        let id: String
-        @Published var name: String
-        @Published var description: String
-        @Published var color: Color
-        @Published var wrappers: [Wrapper]
-        
-        // protocol methods
-        
-        static func == (lhs: Builder.Workout, rhs: Builder.Workout) -> Bool {
-            lhs.id == rhs.id &&
-            lhs.name == rhs.name &&
-            lhs.description == rhs.description &&
-            lhs.color == rhs.color &&
-            lhs.wrappers == rhs.wrappers
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(id)
-            hasher.combine(name)
-            hasher.combine(description)
-            hasher.combine(color)
-            hasher.combine(wrappers)
-        }
-        
-        // class methods
-        
-        init(id: String, name: String, description: String, color: Color, wrappers: [Wrapper]) {
-            self.id = id
-            self.name = name
-            self.description = description
-            self.color = color
-            self.wrappers = wrappers
-        }
-        
-        static func new() -> Workout {
-            Workout(
-                id: UUID().uuidString,
-                name: "New Workout",
-                description: "",
-                color: Color.random(),
-                wrappers: []
-            )
-        }
-        
-        func toWriter() -> Writers.Workout {
-            Writers.Workout(
-                id: id,
-                name: name,
-                description: description,
-                color: color.toHex(),
-                wrappers: wrappers.map({ $0.toWriter() })
-            )
-        }
-    }
-    
     final class Wrapper: ObservableObject, Identifiable, Equatable, Hashable {
         let id: String
         @Published var rpe: Int
@@ -333,6 +277,14 @@ enum Builder {
                 valueTwo: valueTwo ?? 0,
                 type: type
             )
+        }
+        
+        func estimateMax() -> Double? {
+            guard let valueOne, let valueTwo, valueTwo > 0 else { return nil }
+            // Epley Formula: Weight * (1 + Reps / 30)
+            return valueTwo == 1 ?
+                valueOne :
+                valueOne * (1.0 + (valueTwo / 30.0))
         }
     }
     

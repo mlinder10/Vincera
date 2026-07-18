@@ -13,14 +13,7 @@ struct ActiveWorkoutView: View {
     @EnvironmentObject private var store: DataStore
     @ObservedObject var workout: Builder.ActiveWorkout
     @State private var validate = false
-    private var previous: [Writers.Exercise] {
-        store.getPreviousExercises(
-            listIds: workout
-                .wrappers
-                .flattened()
-                .map({ $0.listId })
-        )
-    }
+    @State private var previous = [Writers.Exercise]()
     
     var body: some View {
         ZStack {
@@ -47,11 +40,25 @@ struct ActiveWorkoutView: View {
                     .withAlert(title: "Cancel Workout")
             }
             ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink { PlateCalculatorScreen() } label: {
+                    Image(systemName: "plusminus")
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
                 TimerView(start: workout.startedAt)
             }
         }
+        .task(id: workout) {
+            previous = store.getPreviousExercises(
+                listIds: workout
+                    .wrappers
+                    .flattened()
+                    .map({ $0.listId })
+            )
+        }
     }
     
+    @ViewBuilder
     private var headerTextFieldsView: some View {
         VStack {
             TextField("Name", text: $workout.name)
@@ -64,22 +71,18 @@ struct ActiveWorkoutView: View {
         }
     }
     
+    @ViewBuilder
     private var exercises: some View {
         DraggableForEach($workout.wrappers, withDividers: true) { wrapper in
             ExerciseView(
                 wrapper: wrapper,
                 previous: previous,
+                hiddenIds: workout.wrappers.flattened().map({ $0.listId }),
                 showsRpe: true,
                 validate: validate,
                 removeWrapper: { wrapper in
                     workout.wrappers.removeAll(where: { $0.id == wrapper.id })
-                }) {
-                    MenuOptions(
-                        wrapper: wrapper,
-                        hidden: workout.wrappers.flattened().map({ $0.listId }),
-                        removeExercise: { workout.wrappers.removeAll(where: { $0.id == wrapper.id }) }
-                    )
-                }
+                })
                 .contentShape(Rectangle())
                 .padding(.vertical, 24)
                 .listRowInsets(EdgeInsets())
@@ -88,6 +91,7 @@ struct ActiveWorkoutView: View {
         }
     }
     
+    @ViewBuilder
     private var addExerciseButton: some View {
         BrandButton("Add Exercise") {
             Router.shared.push(
@@ -102,6 +106,7 @@ struct ActiveWorkoutView: View {
         .secondary
     }
     
+    @ViewBuilder
     private var saveWorkoutButton: some View {
         BrandButton("End Workout") {
             Keyboard.dismiss()

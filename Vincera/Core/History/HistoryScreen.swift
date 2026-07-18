@@ -10,225 +10,78 @@ import SwiftUI
 struct HistoryScreen: View {
     @EnvironmentObject private var store: DataStore
     @State private var date = Date()
-    private var components: CalendarComponents {
-        date.getComponents()
-    }
-    private var workouts: [Writers.CompletedWorkout] {
-        store.getFiltered(during: components)
-    }
+    @State private var workouts = [Writers.CompletedWorkout]()
+    @State private var calendarMap = [CalendarComponents: Writers.CompletedWorkout?]()
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
-                PRView()
-                    .padding(.horizontal, PADDING_INLINE)
+            VStack(spacing: 24) {
+                RecordListView()
                 
-                CalendarView(date: $date) {
-                    CalendarDayView(workouts: workouts, components: $0)
+                VStack(spacing: 16) {
+                    SectionTitle("Workout Data")
+                    CalendarView(date: $date) {
+                        CalendarDayView(
+                            components: $0,
+                            workout: calendarMap[$0] ?? nil
+                        )
+                    }
                 }
-                .padding(.horizontal, PADDING_INLINE)
-                
-                GraphsView(workouts: workouts, components: components)
                 
                 if !workouts.isEmpty {
-                    WorkoutsView(workouts: workouts)
-                        .padding(.horizontal, PADDING_INLINE)
+                    VStack(spacing: 16) {
+                        VolumeGraph(workouts: workouts)
+                        TimeGraph(workouts: workouts)
+                        BodyPartGraph(workouts: workouts)
+                    }
+                }
+                
+                if !workouts.isEmpty {
+                    CompletedWorkoutsListView(workouts: workouts)
                 }
             }
             .padding(.vertical, PADDING_TOP)
+            .padding(.horizontal, PADDING_INLINE)
         }
-    }
-}
-
-fileprivate struct CalendarDayView: View {
-    let workouts: [Writers.CompletedWorkout]
-    let components: CalendarComponents
-    private var color: Color {
-        if workouts.contains(
-            where:{ $0.startedAt.getComponents().day == components.day }
-        ) { return .accent.opacity(0.4) }
-        if components.isToday { return .blue.opacity(0.3) }
-        return .clear
-    }
-    
-    var body: some View {
-        Text(String(components.day))
-            .font(.caption)
-            .frame(width: 24, height: 24)
-            .background(Circle().fill(color))
-    }
-}
-
-fileprivate struct PRView: View {
-    @EnvironmentObject private var store: DataStore
-    private let columns = [GridItem(), GridItem()]
-    
-    var body: some View {
-        VStack {
-            SectionTitle("Personal Records") {
-                Button("Edit", systemImage: "pencil") {
-                    Router.shared.push(CreatePRRoute())
-                }
-            }
-            if store.trackers.isEmpty {
-                EmptyCard(
-                    title: "No Personal Records Tracked",
-                    description: "Edit your personal records list to keep an eye on your best lifts"
-                )
-            } else {
-                LazyVGrid(columns: columns) {
-                    ForEach(store.getPrs()) {
-                        PRCell(pr: $0)
-                    }
-                }
-            }
-        }
-    }
-}
-
-fileprivate struct PRCell: View {
-    let pr: Writers.PRTrackerValues
-    var exercise: ListExercise { ExerciseList.shared.getExercise(pr.listId) ?? ListExercise.UNKNOWN }
-    
-    var body: some View {
-        Card {
-            VStack(spacing: 6) {
-                Label(pr.type.rawValue, systemImage: pr.type.icon)
-                    .fontWeight(.semibold)
-                Text(exercise.name)
-                    .font(.caption)
-                
-                if let one = pr.valOne, let two = pr.valTwo { values(one, two) }
-                else { empty }
-            }
-            .padding(.vertical)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-    }
-    
-    private func values(_ one: Double, _ two: Double) -> some View {
-        HStack {
-            if pr.type == .reps {
-                Text(one.formatted())
-                Text("x")
-            }
-            
-            Text(one.formatted())
-                .font(.title)
-                .fontWeight(.bold)
-            
-            if pr.type == .weight {
-                Text("x")
-                Text(two.formatted())
-            }
-        }
-    }
-    
-    private var empty: some View {
-        Text("No Data Available")
-            .font(.caption)
-            .foregroundStyle(.secondary)
-    }
-}
-
-fileprivate struct GraphsView: View {
-    let workouts: [Writers.CompletedWorkout]
-    let components: CalendarComponents
-    
-    var body: some View {
-        Group {
-            if workouts.isEmpty { empty }
-            else { graphs }
-        }
-    }
-    
-    var empty: some View {
-        EmptyCard(
-            title: "No Data Available",
-            description: "No workouts were completed during this month"
-        )
-        .padding(.horizontal, PADDING_INLINE)
-    }
-    
-    var graphs: some View {
-        ScrollView(.horizontal) {
-            LazyHStack {
-                VolumeGraph(workouts: workouts)
-                    .containerRelativeFrame(.horizontal, count: 1, spacing: 24)
-                TimeGraph(workouts: workouts)
-                    .containerRelativeFrame(.horizontal, count: 1, spacing: 24)
-                BodyPartGraph(components: components)
-                    .containerRelativeFrame(.horizontal, count: 1, spacing: 24)
-            }
-            .scrollTargetLayout()
-        }
-        .scrollTargetBehavior(.paging)
-        .contentMargins(16)
         .scrollIndicators(.hidden)
-    }
-}
-
-fileprivate struct WorkoutsView: View {
-    let workouts: [Writers.CompletedWorkout]
-    
-    var body: some View {
-        VStack {
-            SectionTitle("Past Workouts")
-            LazyVStack {
-                ForEach(workouts) { workout in
-                    CompletedWorkoutRowView(workout: workout)
-                        .contentShape(Rectangle())
-                        .onTapGesture { Router.shared.push(CompletedWorkoutRoute(workout: workout)) }
-                }
-            }
+        .navigationTitle("History")
+        
+        .task(id: date) {
+            let newComponents = date.getComponents()
+            let filteredWorkouts = store.getFiltered(during: newComponents)
+            let newMap = computeMap(during: newComponents, using: filteredWorkouts)
+            self.workouts = filteredWorkouts
+            self.calendarMap = newMap
         }
     }
 }
 
-fileprivate struct CompletedWorkoutRowView: View {
-    @EnvironmentObject private var store: DataStore
-    let workout: Writers.CompletedWorkout
+private func computeMap(
+    during components: CalendarComponents,
+    using workouts: [Writers.CompletedWorkout]
+) -> [CalendarComponents: Writers.CompletedWorkout?] {
+    var result = [CalendarComponents: Writers.CompletedWorkout?]()
     
-    var body: some View {
-        Card {
-            HStack {
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.fromHex(workout.color))
-                    .frame(width: 8, height: 48)
-                VStack(alignment: .leading) {
-                    Text(workout.name)
-                        .fontWeight(.semibold)
-                    Text(workout.wrappers.flattened().getBodyParts())
-                        .foregroundStyle(.secondary)
-                        .font(.subheadline)
-                    HStack(spacing: 4) {
-                        Text(workout.startedAt.formatted(date: .numeric, time: .omitted))
-                        Text("•")
-                        Text("\(workout.getMinutes()) min")
-                        Text("•")
-                        Text("\(workout.wrappers.flattened().getVolume()) sets")
-                    }
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
-                }
-                Spacer()
-                Menu("", systemImage: "ellipsis.circle") {
-                    Button(role: .destructive) { handleDelete() } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                }
+    let month = History.Month.allCases[components.month - 1]
+    for day in 1...(History.MONTH_DAY_COUNT[month] ?? 1) {
+        let key = CalendarComponents(day: day, month: components.month, year: components.year)
+        
+        for workout in workouts {
+            if workout.startedAt.getComponents() == key {
+                result[key] = workout
+                break
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            // don't currently need to check because workouts are already filtered for the month
+//            else if workout.startedAt.getComponents() < key {
+//                // workouts start with most recent
+//                // if workout.startedAt < key (workout is older than date), we've gone past it
+//                break
+//            }
         }
     }
     
-    func handleDelete() {
-        do {
-            try store.deleteCompletedWorkout(workout)
-        } catch {
-            Router.shared.toast("Error deleting \(workout.name)", type: .error)
-        }
-    }
+    return result
 }
 
 #Preview {

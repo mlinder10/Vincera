@@ -7,61 +7,48 @@
 
 import SwiftUI
 
-struct ExerciseView<Content: View>: View {
-    @State private var scrollItemId: Builder.Exercise.ID? = nil
-    private var scrollIndex: Int? { wrapper.exercises.firstIndex(where: { $0.id == scrollItemId }) }
-    private var currentExercise: Builder.Exercise? { scrollIndex == nil ? wrapper.exercises.first : wrapper.exercises[scrollIndex!] }
-    private var listExercise: ListExercise { ExerciseList.shared.getExercise(currentExercise?.listId ?? "") ?? UNKNOWN_LIST_EXERCISE }
-    
+struct ExerciseView: View {
     @ObservedObject var wrapper: Builder.Wrapper
     let previous: [Writers.Exercise]
-    var showsRpe: Bool = false
-    var validate: Bool = false
+    let hiddenIds: [String]
+    var showsRpe = false
+    var validate = false
     var disabled = false
     let removeWrapper: (Builder.Wrapper) -> Void
-    let menuItems: () -> Content
-    
     
     var body: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text(listExercise.name)
-                    .fontWeight(.semibold)
-                Spacer()
-                if !disabled {
-                    Menu("", systemImage: "ellipsis.circle") {
-                        Button("Learn", systemImage: "book", action: handleOpenExercisePage)
-                        menuItems()
+        VStack(spacing: 16) {
+            if wrapper.exercises.count == 1 {
+                InternalExerciseView(
+                    exercise: wrapper.exercises[0],
+                    previous: previous.first(where: { $0.listId == wrapper.exercises[0].listId }),
+                    validate: validate,
+                    disabled: disabled,
+                    onAdd: handleAdd,
+                    onReplace: handleReplace,
+                    onDelete: handleDelete
+                )
+            } else {
+                HStack(spacing: 16) {
+                    Rectangle()
+                        .fill(.backgroundSecondary)
+                        .frame(width: 2)
+                    VStack {
+                        ForEach(wrapper.exercises) { exercise in
+                            InternalExerciseView(
+                                exercise: exercise,
+                                previous: previous.first(where: { $0.listId == exercise.listId }),
+                                validate: validate,
+                                disabled: disabled,
+                                onAdd: handleAdd,
+                                onReplace: handleReplace,
+                                onDelete: handleDelete
+                            )
+                            if exercise != wrapper.exercises.last {
+                                Divider().padding(.vertical, 8)
+                            }
+                        }
                     }
-                }
-            }
-            
-            ExercisesScrollView(
-                wrapper: wrapper,
-                scrollItemId: $scrollItemId,
-                listExercise: listExercise,
-                scrollIndex: scrollIndex,
-                previous: previous,
-                validate: validate,
-                disabled: disabled
-            )
-            
-            if !disabled {
-                HStack {
-                    Text("Delete Set")
-                        .font(.subheadline)
-                        .foregroundStyle(.red)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .backgroundRect(radius: 6, fill: .regularMaterial)
-                        .onTapGesture { handleRemoveSet() }
-                    Text("Add Set")
-                        .font(.subheadline)
-                        .foregroundStyle(.accent)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .backgroundRect(radius: 6, fill: .regularMaterial)
-                        .onTapGesture { handleAddSet() }
                 }
             }
             
@@ -89,226 +76,184 @@ struct ExerciseView<Content: View>: View {
         }
     }
     
-    func handleOpenExercisePage() {
-        guard let currentExercise, let exercise = ExerciseList.shared.getExercise(currentExercise.listId) else { return }
-        Router.shared.push(ExercisePageRoute(exercise: exercise))
+    private func handleAdd(_ exercise: Builder.Exercise) {
+        Router.shared.push(
+            ExerciseListRoute(
+                hidden: hiddenIds,
+                replacementId: nil,
+                onTap: nil,
+                onAdd: { exercises in
+                    wrapper.addExercises(exercises, after: exercise)
+                    Router.shared.pop()
+                }
+            )
+        )
     }
     
-    func handleRemoveSet() {
-        guard let currentExercise else { return }
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        guard currentExercise.sets.count > 1 else {
-            Haptics.notify(.warning)
-            return
+    private func handleReplace(_ exercise: Builder.Exercise) {
+        Router.shared.push(
+            ExerciseListRoute(
+                hidden: hiddenIds,
+                replacementId: exercise.listId,
+                onTap: { listItem in
+                    wrapper.replace(exercise, with: listItem)
+                    Router.shared.pop()
+                },
+                onAdd: nil
+            )
+        )
+    }
+    
+    private func handleDelete(_ exercise: Builder.Exercise) {
+        if wrapper.exercises.count == 1 {
+            removeWrapper(wrapper)
+        } else {
+            wrapper.exercises.removeAll(where: { $0.id == exercise.id })
         }
-    
-        wrapper.exercises[scrollIndex ?? 0].removeSet()
-    }
-    
-    func handleAddSet() {
-        guard wrapper.exercises.count > 0 else { return }
-        wrapper.exercises[scrollIndex ?? 0].addSet()
     }
 }
 
-fileprivate struct ExercisesScrollView: View {
-    @ObservedObject var wrapper: Builder.Wrapper
-    @Binding var scrollItemId: Builder.Exercise.ID?
-    let listExercise: ListExercise
-    let scrollIndex: Int?
-    let previous: [Writers.Exercise]
+private struct InternalExerciseView: View {
+    @ObservedObject var exercise: Builder.Exercise
+    let previous: Writers.Exercise?
     let validate: Bool
     let disabled: Bool
+    let onAdd: (Builder.Exercise) -> Void
+    let onReplace: (Builder.Exercise) -> Void
+    let onDelete: (Builder.Exercise) -> Void
+    private let listItem: ListExercise
+    
+    init(
+        exercise: Builder.Exercise,
+        previous: Writers.Exercise?,
+        validate: Bool,
+        disabled: Bool,
+        onAdd: @escaping (Builder.Exercise) -> Void,
+        onReplace: @escaping (Builder.Exercise) -> Void,
+        onDelete: @escaping (Builder.Exercise) -> Void
+    ) {
+        self.exercise = exercise
+        self.previous = previous
+        self.validate = validate
+        self.disabled = disabled
+        self.onAdd = onAdd
+        self.onReplace = onReplace
+        self.onDelete = onDelete
+        self.listItem = ExerciseList.shared.getExercise(exercise.listId) ?? UNKNOWN_LIST_EXERCISE
+    }
     
     var body: some View {
-        Group {
-            if wrapper.exercises.count > 1 {
-                TabIndexView(
-                    index: scrollIndex,
-                    total: wrapper.exercises.count
-                )
-            }
-            ScrollView(.horizontal) {
-                HStack {
-                    ForEach(wrapper.exercises) { ex in
-                        let p = previous.first(where: { $0.listId == ex.listId })
-                        SetsView(
-                            exercise: ex,
-                            previous: p,
-                            listExercise: listExercise,
-                            validate: validate,
-                            disabled: disabled
-                        )
-                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+        VStack {
+            HStack {
+                Text(listItem.name)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                
+                if !disabled {
+                    Menu("", systemImage: "ellipsis.circle") {
+                        Button("Learn", systemImage: "book.fill") { Router.shared.push(ExercisePageRoute(exercise: listItem)) }
+                        Button("Add", systemImage: "plus") { onAdd(exercise) }
+                        Button("Replace", systemImage: "arrow.left.arrow.right") { onReplace(exercise) }
+                        Button("Delete", systemImage: "trash", role: .destructive) { onDelete(exercise) }
                     }
                 }
-                .scrollTargetLayout()
             }
-            .scrollPosition(id: $scrollItemId)
-            .scrollTargetBehavior(.viewAligned)
-            .scrollIndicators(.hidden)
-        }
-    }
-}
-
-fileprivate struct SetsView: View {
-    @ObservedObject var exercise: Builder.Exercise
-    let previous: Writers.Exercise?
-    let listExercise: ListExercise
-    let validate: Bool
-    let disabled: Bool
-    private var columns: [GridItem] {
-        var items = [GridItem]()
-        if listExercise.unitsOne != listExercise.unitsTwo {
-            items = [GridItem(.fixed(32)), GridItem(), GridItem(), GridItem(), GridItem(.fixed(20))]
-        } else {
-            items = [GridItem(.fixed(32)), GridItem(), GridItem(), GridItem(.fixed(20))]
-        }
-        if disabled { items.removeLast() }
-        return items
-    }
-    
-    var body: some View {
-        LazyVGrid(columns: columns, spacing: 4) {
-            Text("Set")
-            Text("Previous")
-            Text(listExercise.unitsOne.rawValue)
-            if listExercise.unitsOne != listExercise.unitsTwo {
-                Text(listExercise.unitsTwo.rawValue)
-            }
-            if !disabled {
-                Text("")
-            }
-            ForEach(exercise.sets.enumerated(), id: \.element.id) { (idx, set) in
-                SetRow(
-                    exercise: exercise,
-                    set: set,
-                    previous: previous,
-                    listExercise: listExercise,
-                    index: idx,
-                    validate: validate,
-                    disabled: disabled
-                )
-            }
-        }
-    }
-}
-
-fileprivate struct SetRow: View {
-    @EnvironmentObject private var store: DataStore
-    @ObservedObject var exercise: Builder.Exercise
-    @ObservedObject var set: Builder.Set
-    let previous: Writers.Exercise?
-    let listExercise: ListExercise
-    let index: Int
-    let validate: Bool
-    let disabled: Bool
-    
-    var body: some View {
-        Group {
-            SetTypeView(
-                type: $set.type,
-                index: index + 1,
+            
+            SetsView(
+                exercise: exercise,
+                previous: previous,
+                listExercise: listItem,
+                validate: validate,
                 disabled: disabled
             )
             
-            previousButton
-            
-            NumberField(
-                "-",
-                num: $set.valueOne,
-                validate: validate
-            )
-            .disabled(disabled)
-            
-            if listExercise.unitsOne != listExercise.unitsTwo {
-                NumberField(
-                    "-",
-                    num: $set.valueTwo,
-                    validate: validate
-                )
-                .disabled(disabled)
-            }
-            
-            if !disabled && index + 1 < exercise.sets.count {
-                Button("", systemImage: "arrow.down") {
-                    exercise.fillDown(index)
+            if !disabled {
+                HStack {
+                    BrandButton("Delete", role: .destructive, action: handleRemoveSet)
+                        .secondary
+                    BrandButton("Add", action: handleAddSet)
+                        .secondary
                 }
-                .disabled(!exercise.canFillDown(index))
             }
         }
     }
     
-    private var previousButton: some View {
-        Group {
-            if !disabled, let vals = getPreviousValues(index) {
-                let isSelected = hasSelectedPrevious(vals, index: index)
-                Button("\(vals.0.formatted())x\(vals.1.formatted())") {
-                    handleSelectPrevious(isSelected: isSelected, vals: vals)
-                }
-                .foregroundStyle(isSelected ? .secondary : .primary)
-            } else {
-                Text("-")
-                    .foregroundStyle(.secondary)
-            }
-        }
-    }
-    
-    private func getPreviousValues(_ index: Int) -> (Double, Double)? {
-        guard let previous else { return nil }
-        guard previous.sets.count > index else { return nil }
-        return (previous.sets[index].valueOne, previous.sets[index].valueTwo)
-    }
-    
-    private func handleSelectPrevious(isSelected: Bool, vals: (Double, Double)) {
-        if isSelected {
+    private func handleRemoveSet() {
+        Keyboard.dismiss()
+        guard exercise.sets.count > 1 else {
             Haptics.notify(.warning)
-        } else {
-            let newSet = exercise.sets[index]
-            newSet.valueOne = vals.0
-            newSet.valueTwo = vals.1
-            exercise.sets[index] = newSet
+            return
+        }
+        
+        withAnimation(.easeOut(duration: 0.2)) {
+            exercise.removeSet()
         }
     }
     
-    private func hasSelectedPrevious(_ vals: (Double, Double)?, index: Int) -> Bool {
-        guard let vals, exercise.sets.count > index else { return false }
-        return exercise.sets[index].valueOne == vals.0 && exercise.sets[index].valueTwo == vals.1
+    private func handleAddSet() {
+        Keyboard.dismiss()
+        
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            exercise.addSet()
+        }
     }
 }
 
-struct MenuOptions: View {
-    @ObservedObject var wrapper: Builder.Wrapper
-    let hidden: [String]
-    let removeExercise: () -> Void
-    
-    var body: some View {
-        Group {
-            Button("Superset", systemImage: "plus", action: handleSuperset)
-            Button("Replace", systemImage: "arrow.left.arrow.right", action: handleReplace)
-            Button("Delete", systemImage: "trash", role: .destructive, action: removeExercise)
+#Preview {
+    ScrollView {
+        LazyVStack {
+//            ExerciseView(
+//                wrapper: .init(
+//                    id: UUID().uuidString,
+//                    rpe: 5,
+//                    exercises: [
+//                        .init(
+//                            id: UUID().uuidString,
+//                            listId: "0",
+//                            sets: [
+//                                .init(id: UUID().uuidString, type: .normal),
+//                                .init(id: UUID().uuidString, type: .normal),
+//                                .init(id: UUID().uuidString, type: .normal)
+//                            ]
+//                        )
+//                    ]
+//                ),
+//                previous: [],
+//                removeWrapper: { _ in }
+//            )
+            ExerciseView(
+                wrapper: .init(
+                    id: UUID().uuidString,
+                    rpe: 5,
+                    exercises: [
+                        .init(
+                            id: UUID().uuidString,
+                            listId: "0",
+                            sets: [
+                                .init(id: UUID().uuidString, type: .normal),
+                                .init(id: UUID().uuidString, type: .normal),
+                                .init(id: UUID().uuidString, type: .normal)
+                            ]
+                        ),
+                        .init(
+                            id: UUID().uuidString,
+                            listId: "1",
+                            sets: [
+                                .init(id: UUID().uuidString, type: .normal),
+                                .init(id: UUID().uuidString, type: .normal),
+                                .init(id: UUID().uuidString, type: .normal)
+                            ]
+                        )
+                    ]
+                ),
+                previous: [],
+                hiddenIds: ["0", "1"],
+                showsRpe: true,
+                removeWrapper: { _ in }
+            )
         }
-    }
-    
-    private func handleSuperset() {
-        Router.shared.push(
-            ExerciseListRoute(
-                hidden: hidden,
-                replacementId: nil,
-                onTap: nil,
-                onAdd: { wrapper.superset($0); Router.shared.pop() }
-            )
-        )
-    }
-    
-    private func handleReplace() {
-        Router.shared.push(
-            ExerciseListRoute(
-                hidden: hidden,
-                replacementId: wrapper.exercises.first?.listId,
-                onTap: nil,
-                onAdd: { wrapper.replace($0); Router.shared.pop() }
-            )
-        )
+        .padding(.horizontal, PADDING_INLINE)
+        .padding(.top, PADDING_TOP)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  WorkoutScreen_.swift
+//  WorkoutScreen.swift
 //  Vincera
 //
 //  Created by Matt Linder on 5/22/26.
@@ -7,14 +7,20 @@
 
 import SwiftUI
 
-struct WorkoutScreen_: View {
+struct WorkoutScreen: View {
     @EnvironmentObject private var store: DataStore
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: 32) {
                 VStack {
-                    SectionTitle("Today's Workout")
+                    SectionTitle("Today's Workout") {
+                        Button(
+                            "New Workout",
+                            systemImage: "bolt.fill",
+                            action: { handleStartDay() }
+                        )
+                    }
                         .padding(.horizontal, PADDING_INLINE)
                     if let split = store.currentSplit {
                         dayView(split)
@@ -43,41 +49,44 @@ struct WorkoutScreen_: View {
                 .padding(.horizontal, PADDING_INLINE)
                 
                 VStack {
-//                    BrandButton("View Splits", systemImage: "list.bullet") {
-//                        Router.shared.push(SplitListRoute())
-//                    }
-//                    .secondary
-                    BrandButton("Generate Plan", systemImage: "sparkles") {
+                    BrandButton("Generate Split", systemImage: "sparkles") {
                         Router.shared.push(AssistedSplitRoute())
                     }
                     .primary
+                    
+                    BrandButton("Create Split", systemImage: "plus") {
+                        Router.shared.push(SplitEditorRoute(split: nil))
+                    }
+                    .secondary
                 }
                 .padding(.horizontal, PADDING_INLINE)
             }
-            .padding(.top, PADDING_TOP)
+            .padding(.vertical, PADDING_TOP)
         }
+        .scrollIndicators(.hidden)
+        .navigationTitle("Workout")
     }
     
+    @ViewBuilder
     private func dayView(_ split: Writers.Split) -> some View {
-        Group {
-            InfiniteCarousel(
-                data: split.days,
-                selectedTab: Binding(
-                    get: { (store.splitMeta.item.dayIndex ?? 0) + 1 },
-                    set: handleUpdateDayIndex
-                ),
-                height: 240,
-                onTabChange: { store.setDayIndex($0) }) {
-                    WorkoutCarouselItem(
-                        split: split,
-                        day: $0,
-                        startWorkout: handleStartDay
-                    )
-                }
-            CarouselIndicators()
-        }
+        InfiniteCarousel(
+            data: split.days,
+            selectedTab: Binding(
+                get: { (store.splitMeta.item.dayIndex ?? 0) + 1 },
+                set: handleUpdateDayIndex
+            ),
+            height: 280,
+            onTabChange: { store.setDayIndex($0) }) {
+                WorkoutCarouselItem(
+                    split: split,
+                    day: $0,
+                    startWorkout: handleStartDay
+                )
+            }
+        CarouselIndicators()
     }
     
+    @ViewBuilder
     private var emptyDayView: some View {
         VStack(spacing: 16) {
             EmptyCard(
@@ -97,8 +106,10 @@ struct WorkoutScreen_: View {
     }
     
     private func handleUpdateDayIndex(_ index: Int) {
+        // carousel is 1-indexed
         guard let split = store.currentSplit else { return }
         if index == 0 { store.splitMeta.item.dayIndex = split.days.count - 1 }
+        else if index == split.days.count + 1 { store.splitMeta.item.dayIndex = 0 }
         else { store.splitMeta.item.dayIndex = index - 1 }
     }
     

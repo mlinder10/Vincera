@@ -29,6 +29,22 @@ extension Array {
     }
 }
 
+extension Dictionary {
+    func toArray() -> Array<Value> {
+        Array(self.values)
+    }
+}
+
+extension Array where Element: Identifiable, Element.ID == String {
+    func toDict() -> [String: Element] {
+        var result = [String: Element]()
+        for element in self {
+            result[element.id] = element
+        }
+        return result
+    }
+}
+
 private let NUMERIC_CHARS = "1234567890."
 
 extension String {
@@ -102,7 +118,7 @@ extension Double {
 }
 
 private let IMAGE_FILE_EXT = ".jpeg"
-private let IMAGE_BASE_URL = "https://vinceratraining.com/api/images/"
+private let IMAGE_BASE_URL = "https://vinceratraining.com/images/"
 
 func fetchImage(_ filename: String?) async -> UIImage? {
     guard let filename else { return nil }

@@ -23,6 +23,17 @@ enum Subscription: String, CaseIterable {
     static func contains(id: String) -> Bool {
         Subscription.ids().contains(id)
     }
+    
+    func toStatus() -> SubscriptionStatus {
+        switch self {
+        case .monthly: .monthly
+        case .yearly: .yearly
+        }
+    }
+}
+
+enum SubscriptionStatus {
+    case none, monthly, yearly
 }
 
 @MainActor
@@ -30,13 +41,15 @@ final class ProductManager: ObservableObject {
     @Published var monthlySubProduct: Product?
     @Published var yearlySubProduct: Product?
     @Published var isTrialEligible: Bool?
-    @Published var isSubscribed: Bool?
+    @Published var currentSubscription: SubscriptionStatus?
     
     private var transactionListener: Task<Void, Error>?
     
     init() {
         transactionListener = listenForTransactions()
-        isSubscribed = hasAdminStatus()
+        if hasAdminStatus() {
+            currentSubscription = .yearly
+        }
         
         Task {
             await loadProducts()
@@ -64,24 +77,29 @@ final class ProductManager: ObservableObject {
         }
     }
     
+    func checkAdminStatus() {
+        if hasAdminStatus() {
+            self.currentSubscription = .yearly
+        }
+    }
+    
     private func updateSubscriptionStatus() async {
         if hasAdminStatus() {
-            self.isSubscribed = true
+            self.currentSubscription = .yearly
             return
         }
         
-        var purchasedResult: Bool = false
+        self.currentSubscription = SubscriptionStatus.none
         
         for await result in Transaction.currentEntitlements {
             if let transaction = try? checkVerified(result) {
-                if Subscription.contains(id: transaction.productID) {
-                    purchasedResult = true
-                    break
+                if transaction.productID == Subscription.monthly.rawValue {
+                    self.currentSubscription = .monthly
+                } else if transaction.productID == Subscription.yearly.rawValue {
+                    self.currentSubscription = .yearly
                 }
             }
         }
-        
-        self.isSubscribed = purchasedResult
     }
     
     private func listenForTransactions() -> Task<Void, Error> {
@@ -110,7 +128,7 @@ final class ProductManager: ObservableObject {
         case .success(let verification):
             // Check if the transaction is legitimate
             if case .verified(let transaction) = verification {
-                self.isSubscribed = true
+                self.currentSubscription = plan.toStatus()
                 await transaction.finish()
             }
         case .userCancelled, .pending:

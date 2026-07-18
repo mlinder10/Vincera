@@ -131,6 +131,10 @@ extension View {
     var secondary: some View {
         self.modifier(SecondaryButtonStyle())
     }
+    
+    var outline: some View {
+        self.modifier(OutlineButtonStyle())
+    }
 }
 
 private struct PrimaryButtonStyle: ViewModifier {
@@ -138,10 +142,11 @@ private struct PrimaryButtonStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .fontWeight(.semibold)
             .buttonStyle(.borderedProminent)
-            .foregroundStyle(isEnabled ? Color.background : Color.primary.opacity(0.5))
-            .tint(isEnabled ? .accent : .gray.opacity(0.5))
+            .fontWeight(.semibold)
+//            .buttonStyle(.borderedProminent)
+//            .foregroundStyle(isEnabled ? Color.background : Color.primary.opacity(0.5))
+//            .tint(isEnabled ? .accent : .gray.opacity(0.5))
     }
 }
 
@@ -152,6 +157,19 @@ private struct SecondaryButtonStyle: ViewModifier {
         content
             .fontWeight(.semibold)
             .buttonStyle(.bordered)
-            .foregroundStyle(isEnabled ? .accent : .gray)
+//            .foregroundStyle(isEnabled ? .accent : .gray)
+    }
+}
+
+private struct OutlineButtonStyle: ViewModifier {
+    @Environment(\.isEnabled) var isEnabled
+    
+    func body(content: Content) -> some View {
+        content
+            .fontWeight(.semibold)
+            .padding(.vertical, 6)
+            .background(
+                Capsule().stroke(.accent, lineWidth: 1.5)
+            )
     }
 }

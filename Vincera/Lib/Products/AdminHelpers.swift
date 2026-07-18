@@ -20,3 +20,23 @@ func revokeAdminStatus() {
 func hasAdminStatus() -> Bool {
     UserDefaults.standard.bool(forKey: ADMIN_KEY)
 }
+
+private struct AdminResponse: Decodable {
+    let success: Bool
+}
+
+func tryGrantAdminStatus(with token: String) async {
+    let client = HttpClient(
+        baseUrl: "https://vinceratraining.com/api",
+        headers: ["Content-Type": "application/json"]
+    )
+    
+    if let result = try? await client.request(
+        "/admin",
+        method: .post,
+        body: ["token": token]
+    ), let decoded = try? JSONDecoder().decode(AdminResponse.self, from: result.0),
+    decoded.success {
+        grantAdminStatus()
+    }
+}

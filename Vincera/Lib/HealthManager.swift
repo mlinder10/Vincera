@@ -54,31 +54,4 @@ final class HealthManager {
             self.workoutBuilder = nil
         }
     }
-    
-    // sleep
-    
-    func fetchSleepData() async throws -> [SleepData] {
-        // authorization
-        let typesToShare: Set<HKWorkoutType> = Set()
-        let typesToRead: Set = [HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!]
-        try await healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead)
-        
-        // core
-        guard let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else { return [] } // should never return
-        
-        // Sort by end date to get the most recent samples
-        let sleepDescriptor = HKSampleQueryDescriptor(
-            predicates: [.categorySample(type: sleepType)],
-            sortDescriptors: [SortDescriptor(\.endDate, order: .reverse)],
-            limit: 100
-        )
-        
-        // This waits for the results properly
-        let samples = try await sleepDescriptor.result(for: healthStore)
-        
-        return samples.compactMap { sample in
-            guard let stage = HKCategoryValueSleepAnalysis(rawValue: sample.value) else { return nil }
-            return SleepData(start: sample.startDate, end: sample.endDate, stage: stage)
-        }
-    }
 }

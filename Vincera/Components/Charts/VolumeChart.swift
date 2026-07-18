@@ -20,9 +20,7 @@ struct VolumePieChart: View {
             VStack(alignment: .leading, spacing: 8) {
                 VStack(alignment: .leading) {
                     if let title {
-                        Text(title)
-                            .fontWeight(.semibold)
-                            .font(.subheadline)
+                        Text(title).dataTitle
                     }
                     if let subtitle {
                         Text(subtitle)

@@ -21,9 +21,7 @@ struct DetailView<Content : View>: View {
         .sheet(isPresented: $isPresented) {
             VStack(spacing: 16) {
                 HStack {
-                    Button("Dismiss", systemImage: "xmark") {
-                        isPresented = false
-                    }
+                    Button("Dismiss") { isPresented = false }
                     Spacer()
                 }
                 

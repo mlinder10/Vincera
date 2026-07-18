@@ -121,16 +121,20 @@ private struct CreateExerciseForm: View {
 
 private struct CreateExercisePreview: View {
     let inputs: ExerciseInputs
-    private var columns: [GridItem] {
-        if inputs.unitsTwo != nil {
-            return [GridItem(.fixed(32)), GridItem(), GridItem(), GridItem()]
-        }
-        return [GridItem(.fixed(32)), GridItem(), GridItem()]
-    }
+    private let columns: [GridItem]
     @State private var setType: SetType = .normal
     @State private var valueOne: Double?
     @State private var valueTwo: Double?
     @State private var rpe: Int = 5
+    
+    init(inputs: ExerciseInputs) {
+        self.inputs = inputs
+        if inputs.unitsTwo != nil {
+            self.columns = [GridItem(.fixed(32)), GridItem(), GridItem(), GridItem()]
+        } else {
+            self.columns = [GridItem(.fixed(32)), GridItem(), GridItem()]
+        }
+    }
     
     var body: some View {
         VStack {

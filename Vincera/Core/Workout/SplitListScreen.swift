@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Charts
 
 struct SplitListScreen: View {
     @EnvironmentObject private var productManager: ProductManager
@@ -14,13 +13,6 @@ struct SplitListScreen: View {
     
     var body: some View {
         List {
-//            Section("Premium Splits") {
-//                ForEach(PREMIUM_SPLITS) { split in
-//                    PremiumSplitCell(split: split)
-//                        .plainListStyle
-//                }
-//            }
-            
             if !store.split.list.isEmpty {
                 Section("Custom Splits") {
                     ForEach(store.split.list) { split in
@@ -40,6 +32,13 @@ struct SplitListScreen: View {
         .listRowSpacing(16)
         .navigationTitle("Splits")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("", systemImage: "plus") {
+                    Router.shared.push(SplitEditorRoute(split: nil))
+                }
+            }
+        }
     }
     
     private func handleRestore() {

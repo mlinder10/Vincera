@@ -96,76 +96,78 @@ private struct OnboardingFormRoute: Route {
 private struct OnboardingForm: View {
     @EnvironmentObject private var store: DataStore
     @ObservedObject private var router = OnboardingRouter.shared
-    @State private var step: AssistedForm.Step = .sex
+    @State private var step: SurveyStep = SurveyStep.allCases.first!
     @State private var direction: AssistedForm.Direction = .forward
-    @State private var info = AssistedForm.SplitInfoDraft()
+    @State private var survey = SurveyDataDraft()
     @State private var isGenerating = false
     
     var body: some View {
-        VStack {
-            Text("Create A Split")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+        ScrollView {
+            VStack {
+                Text("Create A Plan")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.horizontal, PADDING_INLINE)
+                AssistedForm.FormProgressView(step: step)
+                    .padding(.horizontal, PADDING_INLINE)
+                
+                AssistedForm.CoreView(
+                    step: $step,
+                    direction: $direction,
+                    survey: $survey
+                )
                 .padding(.horizontal, PADDING_INLINE)
-            AssistedForm.FormProgressView(step: step)
+                .padding(.vertical)
+                .frame(minHeight: 500)
+                
+                
+                AssistedForm.ActionButton(
+                    step: $step,
+                    direction: $direction,
+                    survey: survey,
+                    isGenerating: isGenerating,
+                    onGenerate: handleGenerate
+                )
                 .padding(.horizontal, PADDING_INLINE)
-            
-            Spacer()
-            
-            AssistedForm.CoreView(
-                step: $step,
-                direction: $direction,
-                info: $info
-            )
-            .padding(.horizontal, PADDING_INLINE)
-            
-            Spacer()
-            
-            AssistedForm.ActionButton(
-                step: $step,
-                direction: $direction,
-                info: info,
-                isGenerating: isGenerating,
-                onGenerate: handleGenerate
-            )
-            .padding(.horizontal, PADDING_INLINE)
+            }
+            .padding(.top, PADDING_TOP)
         }
-        .padding(.top, PADDING_TOP)
     }
     
     @MainActor
     private func handleGenerate() {
         defer { isGenerating = false }
-        guard let info = self.info.toInfo() else { return }
-        let split = SplitBuilder.build(info)
+        guard let survey = self.survey.toSurveyData() else { return }
+        try? store.surveyData.update(survey)
+        let split = SplitBuilder.build(survey)
         
         Task {
             isGenerating = true
-            guard let _ = try? store.createSplit(split) else {
+            guard let _ = try? store.split.create(split) else {
                 Router.shared.toast("Failed to generate split", type: .error)
                 return
             }
             try? store.selectSplit(split)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) { // use this to simulate "generation" in UI
-                router.push(SplitPreviewRoute(split: split))
+                router.push(PlanPreviewRoute(split: split))
                 completeOnboarding()
             }
         }
     }
 }
 
-private struct SplitPreviewRoute: Route {
+private struct PlanPreviewRoute: Route {
     var name: String { "SplitPreview" }
     var stacks: [ProtectedStack] = []
     let split: Writers.Split
     
     func view() -> AnyView {
-        AnyView(SplitPreviewView(split: split))
+        AnyView(PlanPreviewView(split: split))
     }
 }
 
-private struct SplitPreviewView: View {
+private struct PlanPreviewView: View {
     @State private var isShowingPrompt = false
     let split: Writers.Split
     
@@ -174,7 +176,7 @@ private struct SplitPreviewView: View {
             VStack(spacing: 32) {
                 // Header borrowing from your Carousel label style
                 VStack(spacing: 12) {
-                    Text("AI GENERATED SPLIT")
+                    Text("YOUR CUSTOM PLAN")
                         .font(.caption2)
                         .fontWeight(.bold)
                         .tracking(2)
@@ -221,16 +223,7 @@ private struct DayPreviewCard: View {
             VStack(alignment: .leading, spacing: 16) {
                 // Header borrowing from your WorkoutCarouselItem
                 HStack(spacing: 12) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.fromHex(day.color).opacity(0.15))
-                            .frame(width: 40, height: 40)
-                        
-                        Text(day.name.prefix(1))
-                            .font(.system(.subheadline, design: .rounded))
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.fromHex(day.color))
-                    }
+                    DayIcon(name: day.name, color: day.color)
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text(day.name)
@@ -276,8 +269,8 @@ private struct DayPreviewCard: View {
 }
 
 #Preview {
-    OnboardingFlow()
-//    SplitPreviewView(split: VINCERA_SPLITS.first!)
+    //    OnboardingFlow()
+    PlanPreviewView(split: VINCERA_SPLITS.first!)
         .mockNavigation
         .mockEnvironment
 }

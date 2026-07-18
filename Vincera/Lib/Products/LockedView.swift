@@ -32,7 +32,7 @@ struct LockedView: View {
 
 private struct CoreView: View {
     @EnvironmentObject private var productManager: ProductManager
-    @State private var isAccountPresented = false
+    @State private var isSettingsPresented = false
     let isTrialEligible: Bool
     let title: String
     let subtitle: String
@@ -71,9 +71,9 @@ private struct CoreView: View {
             }
             .padding(.horizontal, PADDING_INLINE)
         }
-        .sheet(isPresented: $isAccountPresented) {
+        .sheet(isPresented: $isSettingsPresented) {
             NavigationStack {
-                AccountScreen()
+                SettingsScreen()
             }
         }
     }
@@ -191,5 +191,6 @@ private struct LoadingView: View {
 
 #Preview {
     LockedView()
+        .environmentObject(ProductManager())
 //    SubscriptionStoreView(productIDs: [SUBSCRIPTION_ID])
 }

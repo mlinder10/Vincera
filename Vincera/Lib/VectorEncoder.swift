@@ -1,5 +1,5 @@
 //
-//  TextEmbedding.swift
+//  VectorEncoder.swift
 //  Vincera
 //
 //  Created by Matt Linder on 5/28/26.
@@ -8,70 +8,53 @@
 import Foundation
 import NaturalLanguage
 
-// 2. Vector Encoding Engine
-class LocalVectorEncoder {
-    private let embedding: NLEmbedding?
-
-    init() {
-        // Use Apple's built-in word embedding for English (falls back to undetermined if needed)
-        if let en = NLEmbedding.wordEmbedding(for: .english) {
-            self.embedding = en
-        } else {
-            self.embedding = NLEmbedding.wordEmbedding(for: .undetermined)
-        }
-    }
-
-    /// Encodes text and safely shrinks it to a 64-dimension vector
-    func encodeTo64Dimensions(text: String) -> [Double]? {
-        guard let embedding = embedding else { return nil }
-
-        // Tokenize the text into words
-        let tokenizer = NLTokenizer(unit: .word)
-        tokenizer.string = text
-        var tokenRanges: [Range<String.Index>] = []
-        tokenizer.enumerateTokens(in: text.startIndex..<text.endIndex) { range, _ in
-            tokenRanges.append(range)
-            return true
-        }
-
-        var sumVector: [Double] = []
-        var counted = 0
-
-        for range in tokenRanges {
-            let token = String(text[range]).lowercased()
-            guard let vec = embedding.vector(for: token) else { continue }
-            if sumVector.isEmpty {
-                sumVector = vec
-            } else {
-                // Sum element-wise
-                for i in 0..<min(sumVector.count, vec.count) {
-                    sumVector[i] += vec[i]
-                }
-                // If vec is longer than current sumVector (shouldn't happen with fixed-size embeddings), align length
-                if vec.count > sumVector.count {
-                    sumVector.append(contentsOf: vec[sumVector.count...])
-                }
-            }
-            counted += 1
-        }
-
-        guard counted > 0 else { return nil }
-
-        // Average the vector
-        let averaged = sumVector.map { $0 / Double(counted) }
-
-        // Ensure we return exactly 64 dimensions: slice or pad with zeros
-        if averaged.count >= 64 {
-            return Array(averaged.prefix(64))
-        } else {
-            var padded = averaged
-            padded.append(contentsOf: Array(repeating: 0.0, count: 64 - averaged.count))
-            return padded
-        }
+extension ListExercise {
+    var semanticPayload: String {
+        let muscleGroups = primaryGroup + (secondaryGroups.isEmpty ? "" : ", " + secondaryGroups.joined(separator: ", "))
+        
+        let boostedMuscleGroups = Array(repeating: muscleGroups, count: 5)
+        let boostedBodyParts = Array(repeating: self.bodyPart, count: 5)
+        let boostedIsCardio = Array(repeating: self.exerciseType == "cardio" ? "Cardio" : "Weights", count: 1)
+        let boostedExerciseType = Array(repeating: self.exerciseType, count: 1)
+        let boostedEquipmentType = Array(repeating: self.equipmentType, count: 1)
+        
+        return """
+        1. \(boostedMuscleGroups.joined(separator: " | ")). \
+        2. \(boostedBodyParts.joined(separator: " | ")). \
+        3. \(boostedIsCardio.joined(separator: " | ")). \
+        4. \(boostedExerciseType.joined(separator: " | ")). \
+        5. \(boostedEquipmentType.joined(separator: " | ")).
+        """
     }
 }
 
-// 3. Put it all together
-func processExerciseJSON() {
+final class VectorEncoder {
+    private var embeddingModel: NLContextualEmbedding?
     
+    init() {
+        self.embeddingModel = NLContextualEmbedding(language: .english)
+    }
+    
+    func prepareModel() async throws {
+        try self.embeddingModel?.load()
+    }
+    
+    func encode(_ text: String) -> [Double]? {
+        guard let model = embeddingModel else { return nil }
+        
+        do {
+            let result = try model.embeddingResult(for: text, language: .english)
+            var rawVector = [Double]()
+            
+            result.enumerateTokenVectors(in: text.startIndex..<text.endIndex) { vector, _ in
+                rawVector = vector
+                return false // Return false to stop enumeration immediately
+            }
+            
+            return rawVector.isEmpty ? nil : rawVector
+        } catch {
+            print("Encoding error: \(error)")
+            return nil
+        }
+    }
 }

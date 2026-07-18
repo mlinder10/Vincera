@@ -128,15 +128,7 @@ enum AssistedForm {
         var body: some View {
             Group {
                 switch step {
-                case .measurements:
-                    MeasurementsStepView(
-                        heightFeet: $survey.heightFeet,
-                        heightInches: $survey.heightInches,
-                        weightInLbs: $survey.weightInLbs,
-                        age: $survey.age,
-                    )
                 case .gender: GenderStepView(gender: $survey.gender, onBack: handlePrev)
-                case .activity: ActivityStepView(activity: $survey.activityLevel, onBack: handlePrev)
                 case .goal: GoalStepView(goal: $survey.goal, onBack: handlePrev)
                 case .days: DaysStepView(days: $survey.daysPerWeek, onBack: handlePrev)
                 case .muscles: MusclesStepView(targetMuscles: $survey.targetMuscles, onBack: handlePrev)
@@ -187,30 +179,6 @@ enum AssistedForm {
         }
     }
     
-    private struct MeasurementsStepView: View {
-        @Binding var heightFeet: Int?
-        @Binding var heightInches: Int?
-        @Binding var weightInLbs: Int?
-        @Binding var age: Int?
-        
-        var body: some View {
-            FormComponent(title: "Measurements") {
-                VStack {
-                    HStack {
-                        UnboundNumberField("Height", num: $heightFeet)
-                            .unit("Ft")
-                        UnboundNumberField("Height", num: $heightInches)
-                            .unit("In")
-                    }
-                    UnboundNumberField("Weight", num: $weightInLbs)
-                        .unit("Lbs")
-                    UnboundNumberField("Age", num: $age)
-                }
-                .textFieldStyle(.roundedBorder)
-            }
-        }
-    }
-    
     private struct GenderStepView: View {
         @Binding var gender: Gender?
         let onBack: () -> Void
@@ -220,20 +188,6 @@ enum AssistedForm {
                 RadioSelect(
                     selection: $gender,
                     options: Gender.allCases
-                )
-            }
-        }
-    }
-    
-    private struct ActivityStepView: View {
-        @Binding var activity: ActivityLevel?
-        let onBack: () -> Void
-        
-        var body: some View {
-            FormComponent(title: "Activity Level", onBack: onBack) {
-                RadioSelect(
-                    selection: $activity,
-                    options: ActivityLevel.allCases
                 )
             }
         }

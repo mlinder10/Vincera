@@ -28,7 +28,7 @@ struct ActiveWorkoutDisplayer: ViewModifier {
     @EnvironmentObject private var store: DataStore
     
     func body(content: Content) -> some View {
-        if let workout = store.activeWorkout, !router.showWorkout {
+        if let workout = store.activeWorkout.item, !router.showWorkout {
             content
                 .tabViewBottomAccessory {
                     ActiveWorkoutCollapsed(workout: workout)

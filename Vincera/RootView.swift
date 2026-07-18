@@ -10,8 +10,6 @@ import SwiftUI
 struct RootView: View {
     @ObservedObject private var router = Router.shared
     @EnvironmentObject private var store: DataStore
-    @State private var showImportAlert = false
-    @State private var importedSplit: Split? = nil
     
     var body: some View {
         TabView(selection: $router.tab) {
@@ -22,13 +20,6 @@ struct RootView: View {
             }
             .tabItem { Label("Workout", systemImage: "bolt") }
             .tag(ProtectedTab.workout)
-            
-            NavigationStack(path: $router.routes.plan) {
-                PlanScreen()
-                    .navigator
-            }
-            .tabItem { Label("Plan", systemImage: "calendar") }
-            .tag(ProtectedTab.plan)
 
             NavigationStack(path: $router.routes.history) {
                 HistoryScreen()
@@ -36,21 +27,29 @@ struct RootView: View {
             }
             .tabItem { Label("History", systemImage: "clock") }
             .tag(ProtectedTab.history)
-
-            NavigationStack(path: $router.routes.exercise) {
+            
+            NavigationStack(path: $router.routes.library) {
                 ExerciseListScreen()
                     .navigator
             }
-            .tabItem { Label("Exercises", systemImage: "dumbbell") }
-            .tag(ProtectedTab.exercise)
+            .tabItem { Label("Exercises", systemImage: "dumbbell.fill") }
+            .tag(ProtectedTab.library)
+            
+            NavigationStack(path: $router.routes.settings) {
+                SettingsScreen()
+                    .navigator
+            }
+            .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+            .tag(ProtectedTab.settings)
         }
         .activeWorkoutDisplayer
         .sheet(isPresented: $router.showWorkout, content: { sheetContent })
     }
     
+    @ViewBuilder
     private var sheetContent: some View {
         NavigationStack(path: $router.routes.activeWorkout) {
-            if let workout = store.activeWorkout {
+            if let workout = store.activeWorkout.item {
                 ActiveWorkoutView(workout: workout)
                     .navigator
             } else {

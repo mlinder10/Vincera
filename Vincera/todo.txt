@@ -1,17 +1,30 @@
+# Bugs
+--------------------------------------------------
+
 # Complicated
 --------------------------------------------------
+- Workout goals
 
 # Creative
 --------------------------------------------------
 
 # Tedious
 --------------------------------------------------
+- App Clip
+    - Starting & logging a workout
+    - Viewing history and a completed workout
+    - Viewing an exercise
+- Check display for different font sizes
 
 # Future Updates
 --------------------------------------------------
-- Add more premium splits
 - Record videos
-- Update image url
-- Copy images to new site
 - Add exercises to list
-- Vector encode new exercises
+
+- Home screen widget showing today's workout
+- Recommend deload weeks based on RPE
+- Sharable workout recap
+
+# Current
+--------------------------------------------------
+- Live Activity for workout / rest timer

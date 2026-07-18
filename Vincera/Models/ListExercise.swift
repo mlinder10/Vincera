@@ -166,7 +166,7 @@ enum BodyPart: String, StringRepresentable, Identifiable, CaseIterable, Codable 
     case back = "back"
     case shoulders = "shoulders"
     case legs = "legs"
-    case calves = "calves"
+//    case calves = "calves"
     case abs = "abs"
     
     var string: String { self.rawValue.capitalized }
@@ -178,7 +178,7 @@ enum BodyPart: String, StringRepresentable, Identifiable, CaseIterable, Codable 
         case .back: .yellow
         case .shoulders: .green
         case .legs: .blue
-        case .calves: .purple
+//        case .calves: .purple
         case .abs: .pink
         }
     }
@@ -190,7 +190,7 @@ enum BodyPart: String, StringRepresentable, Identifiable, CaseIterable, Codable 
         case .shoulders: [.frontDelts, .rearDelts, .sideDelts, .traps]
         case .abs: [.abs, .obliques]
         case .legs: [.quads, .hams, .glutes, .adductors, .abductors, .gastrocnemius, .soleus]
-        case .calves: [.soleus, .gastrocnemius]
+//        case .calves: [.soleus, .gastrocnemius]
         case .chest: [.pecs]
         }
     }

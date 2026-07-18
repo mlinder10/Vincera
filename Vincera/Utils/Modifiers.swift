@@ -9,6 +9,14 @@ import Foundation
 import SwiftUI
 
 extension Text {
+    var dataTitle: some View {
+        self
+            .font(.caption)
+            .fontWeight(.bold)
+            .foregroundStyle(.secondary)
+            .textCase(.uppercase)
+    }
+    
     func selectable(_ active: Bool, _ thickBackground: Bool = false) -> some View {
         self
             .padding(.horizontal)
@@ -79,6 +87,7 @@ extension View {
     var mockEnvironment: some View {
         self
             .environmentObject(MOCK_DATA_STORE)
+            .environmentObject(ProductManager())
     }
     
     var mockNavigation: some View {
@@ -89,6 +98,14 @@ extension View {
     
     func mockNavigation(path: Binding<NavigationPath>) -> some View {
         NavigationStack(path: path) {
+            self
+        }
+    }
+    
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
             self
         }
     }

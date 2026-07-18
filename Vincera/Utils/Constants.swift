@@ -39,16 +39,11 @@ let UNKNOWN_LIST_EXERCISE = ListExercise(
 // MARK: start built in splits
 
 func isSplitImmutable(splitId: String) -> Bool {
-    isSplitBuiltin(splitId: splitId) ||
-    isSplitPremium(splitId: splitId)
+    isSplitBuiltin(splitId: splitId)
 }
 
 func isSplitBuiltin(splitId: String) -> Bool {
     VINCERA_SPLITS.contains(where: { $0.id == splitId })
-}
-
-func isSplitPremium(splitId: String) -> Bool {
-    PREMIUM_SPLITS.contains(where: { $0.id == splitId })
 }
 
 let VINCERA_SPLITS = [PPL, UL, FB]

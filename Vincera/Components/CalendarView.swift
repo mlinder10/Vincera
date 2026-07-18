@@ -75,13 +75,41 @@ struct CalendarComponents: Hashable {
     func equals(_ day: Int, _ month: Int, _ year: Int) -> Bool {
         return self.day == day && self.month == month && self.year == year
     }
+    
+    static func == (lhs: CalendarComponents, rhs: CalendarComponents) -> Bool {
+        lhs.year == rhs.year && lhs.month == rhs.month && lhs.day == rhs.day
+    }
+    
+    static func < (lhs: CalendarComponents, rhs: CalendarComponents) -> Bool {
+        lhs.year != rhs.year ?
+            lhs.year < rhs.year :
+            lhs.month != rhs.month ?
+                lhs.month < rhs.month :
+                lhs.day < rhs.day
+    }
+    
+    static func > (lhs: CalendarComponents, rhs: CalendarComponents) -> Bool {
+        lhs.year != rhs.year ?
+            lhs.year > rhs.year :
+            lhs.month != rhs.month ?
+                lhs.month > rhs.month :
+                lhs.day > rhs.day
+    }
 }
 
-struct CalendarView<T: View>: View {
+struct CalendarView<Content: View>: View {
     @Binding var date: Date
-    private var components: CalendarComponents { self.date.getComponents() }
-    private var month: History.Month { History.Month.allCases[components.month-1] }
-    @ViewBuilder var dayView: (CalendarComponents) -> T
+    @State private var components: CalendarComponents
+    @State private var month: History.Month
+    @ViewBuilder var dayView: (CalendarComponents) -> Content
+    
+    init(date: Binding<Date>, dayView: @escaping (CalendarComponents) -> Content) {
+        self._date = date
+        let components = date.wrappedValue.getComponents()
+        self.components = components
+        self.month = History.Month.allCases[components.month-1]
+        self.dayView = dayView
+    }
     
     var body: some View {
         VStack(spacing: 24) {
@@ -102,6 +130,10 @@ struct CalendarView<T: View>: View {
                 year: components.year,
                 dayView: dayView
             )
+        }
+        .task(id: date) {
+            self.components = date.getComponents()
+            self.month = History.Month.allCases[components.month-1]
         }
     }
     

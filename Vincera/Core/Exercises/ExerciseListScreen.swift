@@ -11,18 +11,8 @@ struct ExerciseListScreen: View {
     @State private var selected = [ListExercise]()
     @State private var filter: ExerciseList.Filter
     private let replacementId: String?
-    private var exercises: [String: [ListExercise]] {
-        ExerciseList.shared
-            .getFiltered(filter)
-            .groupByPrimaryGroup()
-    }
-    private var recommended: [ListExercise]? {
-        guard let replacementId, replacementId.count != UUID().uuidString.count else { return nil }
-        return try? DatabaseManager.shared.fetchSimilar(
-            exerciseId: replacementId,
-            filter: filter
-        )
-    }
+    @State private var exercises = [String: [ListExercise]]()
+    @State private var recommended: [ListExercise]?
     private var onTap: ((ListExercise) -> Void)?
     private var onAdd: (([ListExercise]) -> Void)?
     
@@ -35,13 +25,13 @@ struct ExerciseListScreen: View {
         self.replacementId = replacementId
         self.onTap = onTap
         self.onAdd = onAdd
-        filter = ExerciseList.Filter(hidden: hidden)
+        self.filter = ExerciseList.Filter(hidden: hidden)
     }
     
     var body: some View {
         List {
             filters
-            if let recommended {
+            if let recommended, !recommended.isEmpty {
                 GroupCell(
                     title: "Recommended",
                     exercises: recommended,
@@ -59,7 +49,7 @@ struct ExerciseListScreen: View {
                     onAdd: onAdd
                 )
             }
-            Color.clear
+            Color.clear // makes space for button
                 .frame(height: PADDING_TOP)
                 .plainListStyle
         }
@@ -78,6 +68,7 @@ struct ExerciseListScreen: View {
                 }
             }
         }
+        .navigationTitle("Exercises")
         .searchable(text: $filter.search)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -86,8 +77,21 @@ struct ExerciseListScreen: View {
                 }
             }
         }
+        .task(id: filter) {
+            exercises = ExerciseList.shared
+                .getFiltered(filter)
+                .groupByPrimaryGroup()
+            
+            if let replacementId {
+                recommended = try? VectorDatabase.shared.fetchSimilar(
+                    exerciseId: replacementId,
+                    filter: filter
+                )
+            }
+        }
     }
     
+    @ViewBuilder
     private var filters: some View {
         Section(header:
             VStack(spacing: 8) {
@@ -99,7 +103,7 @@ struct ExerciseListScreen: View {
     }
 }
 
-fileprivate struct GroupCell: View {
+private struct GroupCell: View {
     let title: String
     let exercises: [ListExercise]
     @Binding var selected: [ListExercise]
@@ -110,8 +114,10 @@ fileprivate struct GroupCell: View {
         Section(title.capitalized) {
             ForEach(exercises) { ex in
                 ExerciseCell(exercise: ex, isSelected: selected.contains(where: { $0.id == ex.id })) {
-                    if onAdd != nil {
-                        if let onTap { onTap($0) } else { selected.toggle($0) }
+                    if let onTap {
+                        onTap($0)
+                    } else if onAdd != nil {
+                        selected.toggle($0)
                     } else {
                         Router.shared.push(ExercisePageRoute(exercise: $0))
                     }
@@ -121,7 +127,7 @@ fileprivate struct GroupCell: View {
     }
 }
 
-fileprivate struct ExerciseCell: View {
+private struct ExerciseCell: View {
     let exercise: ListExercise
     let isSelected: Bool
     let onTap: (ListExercise) -> Void

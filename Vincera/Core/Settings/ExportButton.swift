@@ -42,6 +42,7 @@ struct ExportButton: View {
             }
     }
     
+    @ViewBuilder
     private var sheet: some View {
         NavigationStack {
             VStack {
